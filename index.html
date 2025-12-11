@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Quotation System - Trader Brothers Ltd</title>
   <link rel="stylesheet" href="styles.css">
+  <!-- PDF Generation Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
   <div class="container">
@@ -120,12 +123,25 @@
       <button class="btn-primary" onclick="generateEstimate()">Generate Estimate Preview</button>
     </div>
 
-    <!-- Estimate Preview -->
-    <div class="estimate-preview" id="estimatePreview">
-      <div class="estimate-container" id="estimateContainer"></div>
+    <!-- Modal for Estimate Preview -->
+    <div id="previewModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Estimate Preview</h2>
+          <span class="close" onclick="closePreviewModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+          <div class="estimate-container" id="estimateContainer"></div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" onclick="closePreviewModal()">Close</button>
+          <button class="btn-primary" onclick="generatePDF()">Download PDF</button>
+        </div>
+      </div>
     </div>
   </div>
 
   <script src="script.js"></script>
+  <script src="pdf-generator.js"></script>
 </body>
 </html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quotation System - Trader Brothers Ltd</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div class="company-info">
+        <div class="company-name">TR<span class="highlight">A</span>DER BROTHERS LTD</div>
+        <div class="company-details">
+          123 Business Park, Hillington<br>
+          Glasgow, G52 4XZ, Scotland<br>
+          07448835577<br>
+          info@traderbrothers.co.uk
+        </div>
+      </div>
+      <div class="logo-container">
+        <img src="https://raw.githubusercontent.com/infotraderbrothers-lgtm/traderbrothers-assets-logo/main/Trader%20Brothers.png" alt="Trader Brothers Logo" class="logo">
+      </div>
+    </div>
+
+    <!-- Template Selector -->
+    <div class="form-section template-selector">
+      <label style="font-size: 13px; font-weight: bold; color: #333; margin-bottom: 10px; display: block;">Quick Start Template:</label>
+      <select id="templateSelect" style="width: 100%; padding: 10px; font-size: 14px; border: 1px solid #ddd; border-radius: 4px;">
+        <option value="">-- Start from scratch --</option>
+        <option value="bathroom">Bathroom Renovation</option>
+        <option value="kitchen">Kitchen Rewire</option>
+        <option value="extension">Extension Build</option>
+        <option value="plumbing">General Plumbing Work</option>
+      </select>
+    </div>
+
+    <!-- Rate Settings -->
+    <div class="rate-settings">
+      <h3 style="font-size: 14px; margin-bottom: 15px; color: #333;">Labor Rate & Markup Settings</h3>
+      <div class="markup-grid">
+        <div class="form-group">
+          <label>Hourly Rate (£)</label>
+          <input type="number" id="hourlyRate" value="45" step="5">
+        </div>
+        <div class="form-group">
+          <label>Material Markup (%)</label>
+          <input type="number" id="materialMarkup" value="20" step="5">
+        </div>
+      </div>
+    </div>
+
+    <!-- Client Information -->
+    <div class="form-section">
+      <div class="section-title">Client Information</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Client Name *</label>
+          <input type="text" id="clientName" required>
+        </div>
+        <div class="form-group">
+          <label>Quote Date *</label>
+          <input type="date" id="quoteDate" required>
+        </div>
+        <div class="form-group">
+          <label>Street Address</label>
+          <input type="text" id="clientAddress">
+        </div>
+        <div class="form-group">
+          <label>City</label>
+          <input type="text" id="clientCity">
+        </div>
+        <div class="form-group">
+          <label>Postcode</label>
+          <input type="text" id="clientPostcode">
+        </div>
+        <div class="form-group">
+          <label>Valid Until</label>
+          <input type="date" id="expiryDate">
+        </div>
+        <div class="form-group">
+          <label>Estimate Number</label>
+          <input type="text" id="estimateNumber" placeholder="e.g., EST-001">
+        </div>
+        <div class="form-group">
+          <label>Customer Reference</label>
+          <input type="text" id="customerRef" placeholder="Optional">
+        </div>
+      </div>
+    </div>
+
+    <!-- Line Items with Sections -->
+    <div class="items-section">
+      <div class="section-title">Quote Items (Organized by Section)</div>
+      <div id="sectionsContainer"></div>
+      <button class="add-section-btn" onclick="addSection()">+ Add New Section</button>
+    </div>
+
+    <!-- Totals -->
+    <div class="totals-section">
+      <div class="totals-grid">
+        <div class="total-row">
+          <span>Subtotal:</span>
+          <span id="subtotalDisplay">£0.00</span>
+        </div>
+        <div class="total-row">
+          <span>VAT:</span>
+          <span id="vatDisplay">£0.00</span>
+        </div>
+        <div class="total-row final">
+          <span>Total Amount:</span>
+          <span class="amount" id="totalDisplay">£0.00</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+      <button class="btn-primary" onclick="generateEstimate()">Generate Estimate Preview</button>
+    </div>
+
+    <!-- Estimate Preview -->
+    <div class="estimate-preview" id="estimatePreview">
+      <div class="estimate-container" id="estimateContainer"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

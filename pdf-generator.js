@@ -281,8 +281,9 @@ function generateCompleteHTML() {
       }
       
       .section-header-row td {
-        padding: 15px 12px;
-        font-size: 14px;
+        padding: 12px 12px;
+        font-size: 13px;
+        font-weight: 600;
         color: #333;
         border-top: 2px solid #bc9c22;
         border-bottom: 1px solid #bc9c22;

@@ -1,5 +1,5 @@
-// PDF Generator - Connects to Railway Backend
-const BACKEND_URL = 'https://quotation-toolbackend-production.up.railway.app';
+// PDF Generator using Doppio.sh API
+const DOPPIO_API_KEY = '65601e60f751cbd2c0f60ade'; // Your Doppio API key
 
 async function generatePDF() {
   // Get the estimate container
@@ -7,6 +7,12 @@ async function generatePDF() {
   
   if (!element || !element.innerHTML) {
     alert('Please generate an estimate preview first');
+    return;
+  }
+
+  // Check if API key is set
+  if (DOPPIO_API_KEY === 'YOUR_DOPPIO_API_KEY_HERE') {
+    alert('Please add your Doppio API key in the pdf-generator.js file.\n\nGet your API key from: https://doppio.sh/dashboard');
     return;
   }
 
@@ -27,26 +33,38 @@ async function generatePDF() {
     const sanitizedEstNumber = estimateNumber.replace(/[^a-z0-9]/gi, '_');
     const filename = `${sanitizedClientName}_Estimate_${sanitizedEstNumber}.pdf`;
 
-    console.log('Sending request to backend...');
+    console.log('Sending request to Doppio...');
 
-    // Send request to Railway backend
-    const response = await fetch(`${BACKEND_URL}/api/generate-pdf`, {
+    // Send request to Doppio API
+    const response = await fetch('https://api.doppio.sh/v1/render/pdf', {
       method: 'POST',
       headers: {
+        'Authorization': `Bearer ${DOPPIO_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        html: htmlContent,
-        filename: filename
+        page: {
+          html: htmlContent,
+        },
+        pdf: {
+          printBackground: true,
+          format: 'A4',
+          margin: {
+            top: '20px',
+            right: '20px',
+            bottom: '20px',
+            left: '20px'
+          }
+        }
       })
     });
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
-      throw new Error(errorData.message || `Server error: ${response.status}`);
+      throw new Error(errorData.message || `Doppio API error: ${response.status}`);
     }
 
-    console.log('Receiving PDF from backend...');
+    console.log('Receiving PDF from Doppio...');
 
     // Get the PDF as a blob
     const blob = await response.blob();
@@ -76,10 +94,12 @@ async function generatePDF() {
     let errorMessage = 'Error generating PDF. ';
     
     if (error.message.includes('Failed to fetch')) {
-      errorMessage += 'Cannot connect to the PDF server. Please check:\n\n';
-      errorMessage += '1. Is your Railway backend running?\n';
-      errorMessage += '2. Is your internet connection working?\n';
+      errorMessage += 'Cannot connect to Doppio API. Please check:\n\n';
+      errorMessage += '1. Is your internet connection working?\n';
+      errorMessage += '2. Is your API key correct?\n';
       errorMessage += '3. Check browser console for more details (F12)';
+    } else if (error.message.includes('401')) {
+      errorMessage += 'Invalid API key. Please check your Doppio API key.';
     } else {
       errorMessage += error.message;
     }
@@ -96,7 +116,7 @@ async function generatePDF() {
 function generateCompleteHTML() {
   const estimateContent = document.getElementById('estimateContainer').innerHTML;
   
-  // Get all the CSS styles from the page
+  // Get all the CSS styles with updated table styling
   const styles = `
     <style>
       * {
@@ -226,9 +246,9 @@ function generateCompleteHTML() {
       }
       
       .items-table th {
-        padding: 12px;
+        padding: 14px 12px;
         text-align: left;
-        font-size: 12px;
+        font-size: 14px;
         font-weight: bold;
         color: #333;
         border-bottom: 2px solid #ddd;
@@ -242,10 +262,11 @@ function generateCompleteHTML() {
       }
       
       .items-table td {
-        padding: 12px;
-        font-size: 13px;
-        border-bottom: 1px solid #eee;
-        color: #333;
+        padding: 8px 12px;
+        font-size: 12px;
+        font-weight: normal;
+        border-bottom: 1px solid #f0f0f0;
+        color: #555;
       }
       
       .items-table td:nth-child(2),

@@ -379,8 +379,9 @@ function generateEstimate() {
   `;
 
   document.getElementById('estimateContainer').innerHTML = estimateHTML;
-  document.getElementById('estimatePreview').classList.add('active');
-  
-  // Scroll to preview
-  document.getElementById('estimatePreview').scrollIntoView({ behavior: 'smooth' });
+  document.getElementById('previewModal').style.display = 'block';
+}
+
+function closePreviewModal() {
+  document.getElementById('previewModal').style.display = 'none';
 }

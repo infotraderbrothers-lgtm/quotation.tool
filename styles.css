@@ -441,8 +441,9 @@ body {
 }
 
 .section-header-row td {
-  padding: 15px 12px;
-  font-size: 14px;
+  padding: 12px 12px;
+  font-size: 13px;
+  font-weight: 600;
   color: #333;
   border-top: 2px solid #bc9c22;
   border-bottom: 1px solid #bc9c22;
@@ -535,4 +536,90 @@ body {
   .markup-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* Modal Styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 2% auto;
+  padding: 0;
+  border: 1px solid #888;
+  width: 90%;
+  max-width: 1000px;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.modal-header {
+  padding: 20px 30px;
+  background: linear-gradient(135deg, #bc9c22, #d4af37);
+  color: white;
+  border-radius: 8px 8px 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.close {
+  color: white;
+  font-size: 32px;
+  font-weight: bold;
+  cursor: pointer;
+  line-height: 1;
+  transition: color 0.3s;
+}
+
+.close:hover,
+.close:focus {
+  color: #f0f0f0;
+}
+
+.modal-body {
+  padding: 30px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.modal-footer {
+  padding: 20px 30px;
+  background: #f9f9f9;
+  border-top: 1px solid #ddd;
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  border-radius: 0 0 8px 8px;
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: all 0.3s;
+}
+
+.btn-secondary:hover {
+  background: #5a6268;
+  transform: translateY(-2px);
 }

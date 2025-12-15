@@ -1,5 +1,5 @@
 // PDF Generator using Doppio.sh API
-const DOPPIO_API_KEY = '65601e60f751cbd2c0f60ade'; // Your Doppio API key
+const DOPPIO_API_KEY = '2e650ea1d2829c0979a02189'; // Your Doppio API key
 
 async function generatePDF() {
   // Get the estimate container
@@ -7,12 +7,6 @@ async function generatePDF() {
   
   if (!element || !element.innerHTML) {
     alert('Please generate an estimate preview first');
-    return;
-  }
-
-  // Check if API key is set
-  if (DOPPIO_API_KEY === 'YOUR_DOPPIO_API_KEY_HERE') {
-    alert('Please add your Doppio API key in the pdf-generator.js file.\n\nGet your API key from: https://doppio.sh/dashboard');
     return;
   }
 
@@ -25,6 +19,9 @@ async function generatePDF() {
   try {
     // Get the complete HTML including styles
     const htmlContent = generateCompleteHTML();
+    
+    // Convert HTML to base64 for Doppio API
+    const base64Html = btoa(unescape(encodeURIComponent(htmlContent)));
 
     // Generate filename
     const clientName = document.getElementById('clientName').value || 'Client';
@@ -35,8 +32,8 @@ async function generatePDF() {
 
     console.log('Sending request to Doppio...');
 
-    // Send request to Doppio API
-    const response = await fetch('https://api.doppio.sh/v1/render/pdf', {
+    // Send request to Doppio API using the CORRECT endpoint and structure
+    const response = await fetch('https://api.doppio.sh/v1/render/pdf/direct', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${DOPPIO_API_KEY}`,
@@ -44,30 +41,59 @@ async function generatePDF() {
       },
       body: JSON.stringify({
         page: {
-          html: htmlContent,
-        },
-        pdf: {
-          printBackground: true,
-          format: 'A4',
-          margin: {
-            top: '20px',
-            right: '20px',
-            bottom: '20px',
-            left: '20px'
+          setContent: {
+            html: base64Html
+          },
+          emulateMediaType: 'print',
+          pdf: {
+            printBackground: true,
+            format: 'A4',
+            margin: {
+              top: '20px',
+              right: '20px',
+              bottom: '20px',
+              left: '20px'
+            }
           }
         }
       })
     });
 
+    console.log('Response status:', response.status);
+
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
-      throw new Error(errorData.message || `Doppio API error: ${response.status}`);
+      let errorData;
+      try {
+        errorData = await response.json();
+      } catch (e) {
+        errorData = { message: await response.text() || 'Unknown error' };
+      }
+      
+      console.error('Doppio API error:', errorData);
+      
+      // Specific error messages based on status code
+      if (response.status === 401) {
+        throw new Error('Authentication failed. Your API key appears to be invalid or expired.\n\nPlease:\n1. Check your API key at https://doppio.sh/dashboard\n2. Verify your account is active\n3. Check if you have remaining free tier credits (400 PDFs/month)');
+      } else if (response.status === 403) {
+        throw new Error('Access forbidden. Your API key may not have permission to generate PDFs.');
+      } else if (response.status === 429) {
+        throw new Error('Rate limit exceeded. You may have used your free tier quota (400 PDFs/month).\n\nPlease wait or upgrade your plan at https://doppio.sh/dashboard');
+      } else {
+        throw new Error(errorData.message || `API Error (${response.status}): ${response.statusText}`);
+      }
     }
 
     console.log('Receiving PDF from Doppio...');
 
-    // Get the PDF as a blob
+    // Get the PDF as a blob (direct endpoint returns raw PDF)
     const blob = await response.blob();
+    
+    // Verify we got a PDF
+    if (blob.size === 0) {
+      throw new Error('Received empty PDF from server');
+    }
+
+    console.log('PDF blob size:', blob.size, 'bytes');
 
     // Create download link
     const url = window.URL.createObjectURL(blob);
@@ -78,8 +104,10 @@ async function generatePDF() {
     a.click();
     
     // Cleanup
-    window.URL.revokeObjectURL(url);
-    document.body.removeChild(a);
+    setTimeout(() => {
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    }, 100);
 
     console.log('PDF downloaded successfully!');
     
@@ -91,17 +119,18 @@ async function generatePDF() {
   } catch (error) {
     console.error('Error generating PDF:', error);
     
-    let errorMessage = 'Error generating PDF. ';
+    let errorMessage = 'Error generating PDF\n\n';
     
-    if (error.message.includes('Failed to fetch')) {
-      errorMessage += 'Cannot connect to Doppio API. Please check:\n\n';
-      errorMessage += '1. Is your internet connection working?\n';
-      errorMessage += '2. Is your API key correct?\n';
-      errorMessage += '3. Check browser console for more details (F12)';
-    } else if (error.message.includes('401')) {
-      errorMessage += 'Invalid API key. Please check your Doppio API key.';
+    if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+      errorMessage += 'Network Error - Cannot connect to Doppio API.\n\n';
+      errorMessage += 'Please check:\n';
+      errorMessage += '• Your internet connection\n';
+      errorMessage += '• Firewall or browser extensions blocking the request\n';
+      errorMessage += '• Try using a different browser\n\n';
+      errorMessage += 'If the problem persists, the Doppio service may be temporarily unavailable.';
     } else {
       errorMessage += error.message;
+      errorMessage += '\n\nTechnical details logged to console (press F12 to view)';
     }
     
     alert(errorMessage);
@@ -116,7 +145,7 @@ async function generatePDF() {
 function generateCompleteHTML() {
   const estimateContent = document.getElementById('estimateContainer').innerHTML;
   
-  // Get all the CSS styles with updated table styling
+  // Get all the CSS styles with UPDATED client info sizing
   const styles = `
     <style>
       * {
@@ -190,15 +219,17 @@ function generateCompleteHTML() {
       }
       
       .client-info h3 {
-        font-size: 12px;
+        font-size: 16px;
         color: #666;
-        margin-bottom: 8px;
+        margin-bottom: 10px;
+        font-weight: bold;
       }
       
       .client-info p {
-        font-size: 13px;
-        line-height: 1.5;
+        font-size: 15px;
+        line-height: 1.6;
         color: #333;
+        font-weight: 500;
       }
       
       .estimate-details {

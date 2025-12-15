@@ -1,7 +1,7 @@
-// PDF Generator using Doppio.sh API
+// PDF Generator using Doppio.sh API - FIXED VERSION
 const DOPPIO_API_KEY = '2e650ea1d2829c0979a02189'; // Your Doppio API key
 
-async function generatePDF() {
+async function generatePDF(event) {
   // Get the estimate container
   const element = document.getElementById('estimateContainer');
   
@@ -20,9 +20,6 @@ async function generatePDF() {
     // Get the complete HTML including styles
     const htmlContent = generateCompleteHTML();
     
-    // Convert HTML to base64 for Doppio API
-    const base64Html = btoa(unescape(encodeURIComponent(htmlContent)));
-
     // Generate filename
     const clientName = document.getElementById('clientName').value || 'Client';
     const estimateNumber = document.getElementById('estimateNumber').value || 'EST';
@@ -31,9 +28,10 @@ async function generatePDF() {
     const filename = `${sanitizedClientName}_Estimate_${sanitizedEstNumber}.pdf`;
 
     console.log('Sending request to Doppio...');
+    console.log('HTML length:', htmlContent.length);
 
-    // Send request to Doppio API using the CORRECT endpoint and structure
-    const response = await fetch('https://api.doppio.sh/v1/render/pdf/direct', {
+    // Send request to Doppio API with CORRECTED structure
+    const response = await fetch('https://api.doppio.sh/v1/render/pdf', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${DOPPIO_API_KEY}`,
@@ -41,43 +39,47 @@ async function generatePDF() {
       },
       body: JSON.stringify({
         page: {
-          setContent: {
-            html: base64Html
-          },
-          emulateMediaType: 'print',
-          pdf: {
-            printBackground: true,
-            format: 'A4',
-            margin: {
-              top: '20px',
-              right: '20px',
-              bottom: '20px',
-              left: '20px'
-            }
+          html: htmlContent,  // Plain HTML string (NOT base64)
+          emulateMediaType: 'print'
+        },
+        pdf: {
+          printBackground: true,
+          format: 'A4',
+          margin: {
+            top: '20px',
+            right: '20px',
+            bottom: '20px',
+            left: '20px'
           }
         }
       })
     });
 
     console.log('Response status:', response.status);
+    console.log('Response headers:', response.headers);
 
     if (!response.ok) {
       let errorData;
       try {
         errorData = await response.json();
+        console.error('Error response JSON:', errorData);
       } catch (e) {
-        errorData = { message: await response.text() || 'Unknown error' };
+        const errorText = await response.text();
+        console.error('Error response text:', errorText);
+        errorData = { message: errorText || 'Unknown error' };
       }
-      
-      console.error('Doppio API error:', errorData);
       
       // Specific error messages based on status code
       if (response.status === 401) {
-        throw new Error('Authentication failed. Your API key appears to be invalid or expired.\n\nPlease:\n1. Check your API key at https://doppio.sh/dashboard\n2. Verify your account is active\n3. Check if you have remaining free tier credits (400 PDFs/month)');
+        throw new Error('Authentication failed. Your API key appears to be invalid or expired.\n\nPlease:\n1. Check your API key at https://doppio.sh/dashboard\n2. Verify your account is active\n3. Check if you have remaining free tier credits');
       } else if (response.status === 403) {
         throw new Error('Access forbidden. Your API key may not have permission to generate PDFs.');
       } else if (response.status === 429) {
         throw new Error('Rate limit exceeded. You may have used your free tier quota (400 PDFs/month).\n\nPlease wait or upgrade your plan at https://doppio.sh/dashboard');
+      } else if (response.status === 400) {
+        throw new Error('Bad Request: ' + (errorData.message || 'Invalid request format. Check console for details.'));
+      } else if (response.status >= 500) {
+        throw new Error('Doppio server error. Please try again in a few moments.');
       } else {
         throw new Error(errorData.message || `API Error (${response.status}): ${response.statusText}`);
       }
@@ -85,7 +87,7 @@ async function generatePDF() {
 
     console.log('Receiving PDF from Doppio...');
 
-    // Get the PDF as a blob (direct endpoint returns raw PDF)
+    // Get the PDF as a blob
     const blob = await response.blob();
     
     // Verify we got a PDF
@@ -93,17 +95,30 @@ async function generatePDF() {
       throw new Error('Received empty PDF from server');
     }
 
+    // Verify it's actually a PDF by checking the blob type
+    if (blob.type && !blob.type.includes('pdf') && !blob.type.includes('octet-stream')) {
+      console.warn('Unexpected blob type:', blob.type);
+      // Try to read as text to see if it's an error message
+      const text = await blob.text();
+      console.error('Blob content:', text);
+      throw new Error('Received invalid PDF data from server');
+    }
+
     console.log('PDF blob size:', blob.size, 'bytes');
+    console.log('PDF blob type:', blob.type);
 
     // Create download link
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
     a.download = filename;
+    a.style.display = 'none';
     document.body.appendChild(a);
+    
+    // Trigger download
     a.click();
     
-    // Cleanup
+    // Cleanup after a delay
     setTimeout(() => {
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
@@ -113,11 +128,12 @@ async function generatePDF() {
     
     // Show success message
     setTimeout(() => {
-      alert('PDF downloaded successfully!');
-    }, 100);
+      alert('PDF downloaded successfully as:\n' + filename);
+    }, 200);
 
   } catch (error) {
     console.error('Error generating PDF:', error);
+    console.error('Error stack:', error.stack);
     
     let errorMessage = 'Error generating PDF\n\n';
     
@@ -126,6 +142,7 @@ async function generatePDF() {
       errorMessage += 'Please check:\n';
       errorMessage += '• Your internet connection\n';
       errorMessage += '• Firewall or browser extensions blocking the request\n';
+      errorMessage += '• CORS issues (try from a different domain)\n';
       errorMessage += '• Try using a different browser\n\n';
       errorMessage += 'If the problem persists, the Doppio service may be temporarily unavailable.';
     } else {
@@ -145,7 +162,7 @@ async function generatePDF() {
 function generateCompleteHTML() {
   const estimateContent = document.getElementById('estimateContainer').innerHTML;
   
-  // Get all the CSS styles with UPDATED client info sizing
+  // Get all the CSS styles
   const styles = `
     <style>
       * {
@@ -158,6 +175,7 @@ function generateCompleteHTML() {
         font-family: Arial, sans-serif;
         background: white;
         padding: 20px;
+        color: #333;
       }
       
       .header {
@@ -181,6 +199,7 @@ function generateCompleteHTML() {
       }
       
       .company-name .highlight {
+        color: #d4af37;
         background: linear-gradient(135deg, #bc9c22, #d4af37);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
@@ -193,9 +212,14 @@ function generateCompleteHTML() {
         color: #666;
       }
       
+      .logo-container {
+        flex-shrink: 0;
+      }
+      
       .logo {
         width: 120px;
         height: auto;
+        display: block;
       }
       
       .estimate-banner {
@@ -390,22 +414,26 @@ function generateCompleteHTML() {
         color: #333;
         font-size: 12px;
       }
+      
+      @media print {
+        body {
+          padding: 0;
+        }
+      }
     </style>
   `;
   
   // Combine everything into complete HTML document
-  return `
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Estimate</title>
-      ${styles}
-    </head>
-    <body>
-      ${estimateContent}
-    </body>
-    </html>
-  `;
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estimate</title>
+  ${styles}
+</head>
+<body>
+  ${estimateContent}
+</body>
+</html>`;
 }

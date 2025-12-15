@@ -1,5 +1,5 @@
-// PDF Generator using Doppio.sh API - FIXED VERSION
-const DOPPIO_API_KEY = '2e650ea1d2829c0979a02189'; // Your Doppio API key
+// PDF Generator using PDFShift API - READY TO USE!
+const PDFSHIFT_API_KEY = 'sk_b620db3746ace840fc2030d7ff07e49153afbde0';
 
 async function generatePDF(event) {
   // Get the estimate container
@@ -27,81 +27,60 @@ async function generatePDF(event) {
     const sanitizedEstNumber = estimateNumber.replace(/[^a-z0-9]/gi, '_');
     const filename = `${sanitizedClientName}_Estimate_${sanitizedEstNumber}.pdf`;
 
-    console.log('Sending request to Doppio...');
-    console.log('HTML length:', htmlContent.length);
+    console.log('Sending request to PDFShift...');
+    console.log('HTML content length:', htmlContent.length);
 
-    // Send request to Doppio API with CORRECTED structure
-    const response = await fetch('https://api.doppio.sh/v1/render/pdf', {
+    // Send request to PDFShift API
+    const response = await fetch('https://api.pdfshift.io/v3/convert/pdf', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${DOPPIO_API_KEY}`,
-        'Content-Type': 'application/json',
+        'Authorization': 'Basic ' + btoa('api:' + PDFSHIFT_API_KEY),
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        page: {
-          html: htmlContent,  // Plain HTML string (NOT base64)
-          emulateMediaType: 'print'
-        },
-        pdf: {
-          printBackground: true,
-          format: 'A4',
-          margin: {
-            top: '20px',
-            right: '20px',
-            bottom: '20px',
-            left: '20px'
-          }
+        source: htmlContent,
+        landscape: false,
+        use_print: true,
+        margin: {
+          top: '20px',
+          bottom: '20px',
+          left: '20px',
+          right: '20px'
         }
       })
     });
 
     console.log('Response status:', response.status);
-    console.log('Response headers:', response.headers);
 
     if (!response.ok) {
       let errorData;
       try {
         errorData = await response.json();
-        console.error('Error response JSON:', errorData);
+        console.error('PDFShift error response:', errorData);
       } catch (e) {
-        const errorText = await response.text();
-        console.error('Error response text:', errorText);
-        errorData = { message: errorText || 'Unknown error' };
+        errorData = { error: await response.text() || 'Unknown error' };
       }
       
-      // Specific error messages based on status code
       if (response.status === 401) {
-        throw new Error('Authentication failed. Your API key appears to be invalid or expired.\n\nPlease:\n1. Check your API key at https://doppio.sh/dashboard\n2. Verify your account is active\n3. Check if you have remaining free tier credits');
+        throw new Error('Authentication failed. Please check your PDFShift API key.');
       } else if (response.status === 403) {
-        throw new Error('Access forbidden. Your API key may not have permission to generate PDFs.');
+        throw new Error('Access forbidden. Your API key may not have permission.');
       } else if (response.status === 429) {
-        throw new Error('Rate limit exceeded. You may have used your free tier quota (400 PDFs/month).\n\nPlease wait or upgrade your plan at https://doppio.sh/dashboard');
+        throw new Error('Rate limit exceeded. You may have used your free tier quota (250 PDFs/month).');
       } else if (response.status === 400) {
-        throw new Error('Bad Request: ' + (errorData.message || 'Invalid request format. Check console for details.'));
-      } else if (response.status >= 500) {
-        throw new Error('Doppio server error. Please try again in a few moments.');
+        throw new Error('Bad Request: ' + (errorData.error || errorData.message || 'Invalid request'));
       } else {
-        throw new Error(errorData.message || `API Error (${response.status}): ${response.statusText}`);
+        throw new Error((errorData.error || errorData.message) || `API Error (${response.status}): ${response.statusText}`);
       }
     }
 
-    console.log('Receiving PDF from Doppio...');
+    console.log('Receiving PDF from PDFShift...');
 
     // Get the PDF as a blob
     const blob = await response.blob();
     
-    // Verify we got a PDF
     if (blob.size === 0) {
       throw new Error('Received empty PDF from server');
-    }
-
-    // Verify it's actually a PDF by checking the blob type
-    if (blob.type && !blob.type.includes('pdf') && !blob.type.includes('octet-stream')) {
-      console.warn('Unexpected blob type:', blob.type);
-      // Try to read as text to see if it's an error message
-      const text = await blob.text();
-      console.error('Blob content:', text);
-      throw new Error('Received invalid PDF data from server');
     }
 
     console.log('PDF blob size:', blob.size, 'bytes');
@@ -114,11 +93,8 @@ async function generatePDF(event) {
     a.download = filename;
     a.style.display = 'none';
     document.body.appendChild(a);
-    
-    // Trigger download
     a.click();
     
-    // Cleanup after a delay
     setTimeout(() => {
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
@@ -128,7 +104,7 @@ async function generatePDF(event) {
     
     // Show success message
     setTimeout(() => {
-      alert('PDF downloaded successfully as:\n' + filename);
+      alert('✓ PDF downloaded successfully!\n\nFile: ' + filename);
     }, 200);
 
   } catch (error) {
@@ -138,21 +114,19 @@ async function generatePDF(event) {
     let errorMessage = 'Error generating PDF\n\n';
     
     if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
-      errorMessage += 'Network Error - Cannot connect to Doppio API.\n\n';
+      errorMessage += 'Network Error - Cannot connect to PDFShift API.\n\n';
       errorMessage += 'Please check:\n';
       errorMessage += '• Your internet connection\n';
       errorMessage += '• Firewall or browser extensions blocking the request\n';
-      errorMessage += '• CORS issues (try from a different domain)\n';
       errorMessage += '• Try using a different browser\n\n';
-      errorMessage += 'If the problem persists, the Doppio service may be temporarily unavailable.';
+      errorMessage += 'Technical details are in the console (press F12)';
     } else {
       errorMessage += error.message;
-      errorMessage += '\n\nTechnical details logged to console (press F12 to view)';
+      errorMessage += '\n\nCheck console for more details (press F12)';
     }
     
     alert(errorMessage);
   } finally {
-    // Restore button state
     downloadBtn.textContent = originalText;
     downloadBtn.disabled = false;
   }
@@ -162,7 +136,6 @@ async function generatePDF(event) {
 function generateCompleteHTML() {
   const estimateContent = document.getElementById('estimateContainer').innerHTML;
   
-  // Get all the CSS styles
   const styles = `
     <style>
       * {
@@ -200,10 +173,6 @@ function generateCompleteHTML() {
       
       .company-name .highlight {
         color: #d4af37;
-        background: linear-gradient(135deg, #bc9c22, #d4af37);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
       }
       
       .company-details {
@@ -423,7 +392,6 @@ function generateCompleteHTML() {
     </style>
   `;
   
-  // Combine everything into complete HTML document
   return `<!DOCTYPE html>
 <html lang="en">
 <head>

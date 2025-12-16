@@ -166,7 +166,7 @@ body {
 
 .item-grid {
   display: grid;
-  grid-template-columns: 2fr 0.8fr 1fr 80px;
+  grid-template-columns: 2fr 0.8fr 1fr 100px 80px;
   gap: 10px;
   align-items: end;
 }
@@ -196,7 +196,6 @@ body {
   cursor: pointer;
   font-size: 13px;
   font-weight: bold;
-  margin-top: 10px;
 }
 
 .add-section-btn {
@@ -294,8 +293,53 @@ body {
 
 .markup-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 15px;
+}
+
+/* Library Items Grid */
+.library-items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.library-item {
+  background: white;
+  border: 2px solid #d4af37;
+  border-radius: 6px;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.library-item:hover {
+  background: #fffbf0;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+}
+
+/* Payment Terms Section in Preview */
+.payment-terms-section {
+  margin: 30px 0;
+  padding: 20px;
+  background: #e8f5e9;
+  border-left: 4px solid #4caf50;
+  border-radius: 4px;
+}
+
+.payment-terms-section h3 {
+  font-size: 14px;
+  margin-bottom: 10px;
+  color: #2e7d32;
+  font-weight: bold;
+}
+
+.payment-terms-section p {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #333;
 }
 
 @media print {
@@ -350,15 +394,17 @@ body {
 }
 
 .client-info h3 {
-  font-size: 12px;
+  font-size: 16px;
   color: #666;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
+  font-weight: bold;
 }
 
 .client-info p {
-  font-size: 13px;
-  line-height: 1.5;
+  font-size: 15px;
+  line-height: 1.6;
   color: #333;
+  font-weight: 500;
 }
 
 .estimate-details {
@@ -416,7 +462,8 @@ body {
 
 .items-table th:nth-child(2),
 .items-table th:nth-child(3),
-.items-table th:nth-child(4) {
+.items-table th:nth-child(4),
+.items-table th:nth-child(5) {
   text-align: right;
   width: 100px;
 }
@@ -431,7 +478,8 @@ body {
 
 .items-table td:nth-child(2),
 .items-table td:nth-child(3),
-.items-table td:nth-child(4) {
+.items-table td:nth-child(4),
+.items-table td:nth-child(5) {
   text-align: right;
 }
 
@@ -534,6 +582,10 @@ body {
   }
 
   .markup-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .library-items-grid {
     grid-template-columns: 1fr;
   }
 }

@@ -280,7 +280,8 @@ function generateCompleteHTML() {
       
       .items-table th:nth-child(2),
       .items-table th:nth-child(3),
-      .items-table th:nth-child(4) {
+      .items-table th:nth-child(4),
+      .items-table th:nth-child(5) {
         text-align: right;
         width: 100px;
       }
@@ -295,7 +296,8 @@ function generateCompleteHTML() {
       
       .items-table td:nth-child(2),
       .items-table td:nth-child(3),
-      .items-table td:nth-child(4) {
+      .items-table td:nth-child(4),
+      .items-table td:nth-child(5) {
         text-align: right;
       }
       
@@ -311,6 +313,27 @@ function generateCompleteHTML() {
         color: #333;
         border-top: 2px solid #bc9c22;
         border-bottom: 1px solid #bc9c22;
+      }
+      
+      .payment-terms-section {
+        margin: 30px 0;
+        padding: 20px;
+        background: #e8f5e9;
+        border-left: 4px solid #4caf50;
+        border-radius: 4px;
+      }
+      
+      .payment-terms-section h3 {
+        font-size: 14px;
+        margin-bottom: 10px;
+        color: #2e7d32;
+        font-weight: bold;
+      }
+      
+      .payment-terms-section p {
+        font-size: 13px;
+        line-height: 1.6;
+        color: #333;
       }
       
       .notes-section {

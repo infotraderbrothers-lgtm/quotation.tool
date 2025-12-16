@@ -4,6 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Quotation System - Trader Brothers Ltd</title>
+  
+  <!-- PWA Meta Tags -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#d4af37">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="TB Quotes">
+  <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/infotraderbrothers-lgtm/traderbrothers-assets-logo/main/Trader%20Brothers.png">
+  
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -208,5 +217,69 @@
 
   <script src="script.js"></script>
   <script src="pdf-generator.js"></script>
+  
+  <!-- Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then(reg => console.log('Service Worker registered successfully'))
+          .catch(err => console.log('Service Worker registration failed:', err));
+      });
+    }
+  </script>
 </body>
 </html>
+```
+
+---
+
+## 4. Keep your existing files unchanged:
+- **styles.css** - no changes needed
+- **script.js** - no changes needed  
+- **pdf-generator.js** - no changes needed
+
+---
+
+## Deployment Steps:
+
+1. **In your GitHub repo, create these 2 NEW files:**
+   - `manifest.json` (copy code from section 1)
+   - `service-worker.js` (copy code from section 2)
+
+2. **Replace your existing `index.html`** with the complete code from section 3
+
+3. **Commit and push to GitHub**
+
+4. **Netlify will auto-deploy** (wait 1-2 minutes)
+
+5. **Test the installation:**
+   - **iPhone/iPad**: Safari → Share → "Add to Home Screen"
+   - **Android**: Chrome → Menu (⋮) → "Install app"
+
+---
+
+## About the Logo:
+
+✅ **Yes, you can use the PNG URL!** I've already included it in the manifest.json.
+
+⚠️ **However**, for the best experience (especially on iOS), you should eventually:
+1. Download your logo
+2. Resize it to exactly 192x192 and 512x512 pixels (square)
+3. Save as `icon-192.png` and `icon-512.png`
+4. Upload to your repo root
+5. Update manifest.json to point to `/icon-192.png` and `/icon-512.png`
+
+But the current setup with the URL will work fine to get you started!
+
+---
+
+Your folder structure will be:
+```
+repo/
+├── index.html (updated)
+├── styles.css (no change)
+├── script.js (no change)
+├── pdf-generator.js (no change)
+├── manifest.json (NEW)
+└── service-worker.js (NEW)

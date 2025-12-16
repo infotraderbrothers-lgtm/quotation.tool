@@ -1,6 +1,21 @@
 let sectionCounter = 0;
 let itemCounters = {};
 
+// Item Library - stored in memory
+let itemLibrary = [
+  { id: 1, description: 'Bathroom Renovation', price: 2500, type: 'labor' },
+  { id: 2, description: 'Kitchen Rewire', price: 1800, type: 'labor' },
+  { id: 3, description: 'Consumer Unit Upgrade', price: 450, type: 'labor' },
+  { id: 4, description: 'Tile Installation per m²', price: 45, type: 'labor' },
+  { id: 5, description: 'Double Socket Outlet', price: 35, type: 'labor' },
+  { id: 6, description: 'LED Downlights', price: 25, type: 'materials' },
+  { id: 7, description: 'Radiator Valve Replacement', price: 65, type: 'labor' },
+  { id: 8, description: 'Tap Installation', price: 120, type: 'labor' },
+  { id: 9, description: 'Drain Unblocking', price: 95, type: 'labor' },
+  { id: 10, description: 'Standard White Tiles (Box)', price: 85, type: 'materials' }
+];
+let libraryIdCounter = 11;
+
 // Initialize dates on load
 window.onload = function() {
   const today = new Date();
@@ -14,6 +29,22 @@ window.onload = function() {
   
   // Add first section by default
   addSection();
+  
+  // Render library items
+  renderLibraryItems();
+  
+  // Setup library search
+  document.getElementById('librarySearch').addEventListener('input', renderLibraryItems);
+  
+  // Setup payment terms toggle
+  document.getElementById('paymentTerms').addEventListener('change', function() {
+    const customTermsArea = document.getElementById('customPaymentTerms');
+    if (this.value === 'custom') {
+      customTermsArea.style.display = 'block';
+    } else {
+      customTermsArea.style.display = 'none';
+    }
+  });
 };
 
 // Update expiry date when quote date changes
@@ -24,6 +55,121 @@ document.getElementById('quoteDate').addEventListener('change', function() {
   document.getElementById('expiryDate').value = validUntil.toISOString().split('T')[0];
 });
 
+// Library Management Functions
+function renderLibraryItems() {
+  const searchTerm = document.getElementById('librarySearch').value.toLowerCase();
+  const container = document.getElementById('libraryItems');
+  const filteredItems = itemLibrary.filter(item => 
+    item.description.toLowerCase().includes(searchTerm)
+  );
+  
+  if (filteredItems.length === 0) {
+    container.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">No services found. Add some in the library manager!</p>';
+    return;
+  }
+  
+  container.innerHTML = filteredItems.map(item => `
+    <div class="library-item" onclick="addLibraryItemToQuote(${item.id})">
+      <div style="font-weight: bold; font-size: 13px; color: #333;">${item.description}</div>
+      <div style="font-size: 12px; color: #666; margin-top: 4px;">
+        £${item.price.toFixed(2)} • ${item.type === 'materials' ? 'Materials' : 'Labor'}
+      </div>
+    </div>
+  `).join('');
+}
+
+function addLibraryItemToQuote(itemId) {
+  const item = itemLibrary.find(i => i.id === itemId);
+  if (!item) return;
+  
+  // Find the first section or create one if none exists
+  let targetSectionId = 0;
+  if (Object.keys(itemCounters).length === 0) {
+    addSection();
+    targetSectionId = 0;
+  } else {
+    targetSectionId = parseInt(Object.keys(itemCounters)[0]);
+  }
+  
+  // Add item to section
+  addItemToSection(targetSectionId);
+  const itemCount = itemCounters[targetSectionId] - 1;
+  
+  // Populate the item with library data
+  document.getElementById(`itemDesc${targetSectionId}_${itemCount}`).value = item.description;
+  document.getElementById(`itemQty${targetSectionId}_${itemCount}`).value = 1;
+  document.getElementById(`itemRate${targetSectionId}_${itemCount}`).value = item.price;
+  document.getElementById(`itemType${targetSectionId}_${itemCount}`).value = item.type;
+  
+  calculateItemTotal(targetSectionId, itemCount);
+}
+
+function openLibraryManager() {
+  renderLibraryManagerList();
+  document.getElementById('libraryModal').style.display = 'block';
+}
+
+function closeLibraryManager() {
+  document.getElementById('libraryModal').style.display = 'none';
+  document.getElementById('newLibraryDesc').value = '';
+  document.getElementById('newLibraryPrice').value = '';
+  document.getElementById('newLibraryType').value = 'materials';
+}
+
+function renderLibraryManagerList() {
+  const container = document.getElementById('libraryManagerList');
+  
+  if (itemLibrary.length === 0) {
+    container.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">No services in library yet.</p>';
+    return;
+  }
+  
+  container.innerHTML = itemLibrary.map(item => `
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 8px; background: white;">
+      <div>
+        <div style="font-weight: bold; font-size: 13px; color: #333;">${item.description}</div>
+        <div style="font-size: 12px; color: #666; margin-top: 3px;">
+          £${item.price.toFixed(2)} • ${item.type === 'materials' ? 'Materials' : 'Labor'}
+        </div>
+      </div>
+      <button onclick="deleteLibraryItem(${item.id})" style="background: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px;">Delete</button>
+    </div>
+  `).join('');
+}
+
+function addLibraryItem() {
+  const description = document.getElementById('newLibraryDesc').value.trim();
+  const price = parseFloat(document.getElementById('newLibraryPrice').value) || 0;
+  const type = document.getElementById('newLibraryType').value;
+  
+  if (!description) {
+    alert('Please enter a description');
+    return;
+  }
+  
+  itemLibrary.push({
+    id: libraryIdCounter++,
+    description: description,
+    price: price,
+    type: type
+  });
+  
+  document.getElementById('newLibraryDesc').value = '';
+  document.getElementById('newLibraryPrice').value = '';
+  document.getElementById('newLibraryType').value = 'materials';
+  
+  renderLibraryManagerList();
+  renderLibraryItems();
+}
+
+function deleteLibraryItem(itemId) {
+  if (confirm('Delete this service from your library?')) {
+    itemLibrary = itemLibrary.filter(item => item.id !== itemId);
+    renderLibraryManagerList();
+    renderLibraryItems();
+  }
+}
+
 // Templates
 const templates = {
   bathroom: {
@@ -31,20 +177,20 @@ const templates = {
       {
         name: 'Demolition & Preparation',
         items: [
-          { desc: 'Strip out existing bathroom fixtures', qty: 1, rate: 300 }
+          { desc: 'Strip out existing bathroom fixtures', qty: 1, rate: 300, type: 'labor' }
         ]
       },
       {
         name: 'Installation',
         items: [
-          { desc: 'Install new bath', qty: 1, rate: 450 },
-          { desc: 'Install new sink and toilet', qty: 1, rate: 350 }
+          { desc: 'Install new bath', qty: 1, rate: 450, type: 'labor' },
+          { desc: 'Install new sink and toilet', qty: 1, rate: 350, type: 'labor' }
         ]
       },
       {
         name: 'Tiling',
         items: [
-          { desc: 'Wall tiling', qty: 15, rate: 45 }
+          { desc: 'Wall tiling', qty: 15, rate: 45, type: 'labor' }
         ]
       }
     ]
@@ -54,15 +200,15 @@ const templates = {
       {
         name: 'Electrical Work',
         items: [
-          { desc: 'Consumer unit upgrade', qty: 1, rate: 450 },
-          { desc: 'Kitchen circuit rewire', qty: 1, rate: 1200 }
+          { desc: 'Consumer unit upgrade', qty: 1, rate: 450, type: 'labor' },
+          { desc: 'Kitchen circuit rewire', qty: 1, rate: 1200, type: 'labor' }
         ]
       },
       {
         name: 'Fittings',
         items: [
-          { desc: 'Double socket outlets', qty: 8, rate: 35 },
-          { desc: 'LED downlights', qty: 10, rate: 25 }
+          { desc: 'Double socket outlets', qty: 8, rate: 35, type: 'labor' },
+          { desc: 'LED downlights', qty: 10, rate: 25, type: 'materials' }
         ]
       }
     ]
@@ -72,20 +218,20 @@ const templates = {
       {
         name: 'Groundwork',
         items: [
-          { desc: 'Foundations', qty: 1, rate: 4500 }
+          { desc: 'Foundations', qty: 1, rate: 4500, type: 'labor' }
         ]
       },
       {
         name: 'Structure',
         items: [
-          { desc: 'Brickwork and blockwork', qty: 35, rate: 85 },
-          { desc: 'Roof structure and covering', qty: 1, rate: 3200 }
+          { desc: 'Brickwork and blockwork', qty: 35, rate: 85, type: 'labor' },
+          { desc: 'Roof structure and covering', qty: 1, rate: 3200, type: 'labor' }
         ]
       },
       {
         name: 'Windows & Doors',
         items: [
-          { desc: 'Supply and fit windows and doors', qty: 1, rate: 2400 }
+          { desc: 'Supply and fit windows and doors', qty: 1, rate: 2400, type: 'materials' }
         ]
       }
     ]
@@ -95,9 +241,9 @@ const templates = {
       {
         name: 'Plumbing Works',
         items: [
-          { desc: 'Replace leaking radiator valve', qty: 2, rate: 65 },
-          { desc: 'Install new tap', qty: 1, rate: 120 },
-          { desc: 'Unblock drain', qty: 1, rate: 95 }
+          { desc: 'Replace leaking radiator valve', qty: 2, rate: 65, type: 'labor' },
+          { desc: 'Install new tap', qty: 1, rate: 120, type: 'labor' },
+          { desc: 'Unblock drain', qty: 1, rate: 95, type: 'labor' }
         ]
       }
     ]
@@ -124,6 +270,7 @@ document.getElementById('templateSelect').addEventListener('change', (e) => {
         document.getElementById(`itemDesc${sectionId}_${itemCount}`).value = item.desc;
         document.getElementById(`itemQty${sectionId}_${itemCount}`).value = item.qty;
         document.getElementById(`itemRate${sectionId}_${itemCount}`).value = item.rate;
+        document.getElementById(`itemType${sectionId}_${itemCount}`).value = item.type || 'labor';
         calculateItemTotal(sectionId, itemCount);
       });
     });
@@ -178,6 +325,13 @@ function addItemToSection(sectionId) {
         <label>Rate (£)</label>
         <input type="number" id="itemRate${sectionId}_${itemId}" value="0" step="0.01" oninput="calculateItemTotal(${sectionId}, ${itemId})">
       </div>
+      <div class="form-group">
+        <label>Type</label>
+        <select id="itemType${sectionId}_${itemId}" onchange="calculateTotals()">
+          <option value="materials">Materials</option>
+          <option value="labor">Labor</option>
+        </select>
+      </div>
       <button class="remove-btn" onclick="removeItem(${sectionId}, ${itemId})">Remove</button>
     </div>
     <div style="margin-top: 10px; text-align: right; font-weight: bold; color: #333;">
@@ -203,7 +357,8 @@ function calculateItemTotal(sectionId, itemId) {
 }
 
 function calculateTotals() {
-  let subtotal = 0;
+  let materialsSubtotal = 0;
+  let laborSubtotal = 0;
   
   for (let sectionId in itemCounters) {
     for (let i = 0; i < itemCounters[sectionId]; i++) {
@@ -211,17 +366,45 @@ function calculateTotals() {
       if (itemElement) {
         const qty = parseFloat(document.getElementById(`itemQty${sectionId}_${i}`).value) || 0;
         const rate = parseFloat(document.getElementById(`itemRate${sectionId}_${i}`).value) || 0;
-        subtotal += qty * rate;
+        const type = document.getElementById(`itemType${sectionId}_${i}`).value;
+        const itemTotal = qty * rate;
+        
+        if (type === 'materials') {
+          materialsSubtotal += itemTotal;
+        } else {
+          laborSubtotal += itemTotal;
+        }
       }
     }
   }
   
+  const subtotal = materialsSubtotal + laborSubtotal;
   const vat = subtotal * 0.20;
   const total = subtotal + vat;
   
+  document.getElementById('materialsSubtotalDisplay').textContent = `£${materialsSubtotal.toFixed(2)}`;
+  document.getElementById('laborSubtotalDisplay').textContent = `£${laborSubtotal.toFixed(2)}`;
   document.getElementById('subtotalDisplay').textContent = `£${subtotal.toFixed(2)}`;
   document.getElementById('vatDisplay').textContent = `£${vat.toFixed(2)}`;
   document.getElementById('totalDisplay').textContent = `£${total.toFixed(2)}`;
+}
+
+function getPaymentTermsText() {
+  const paymentTerms = document.getElementById('paymentTerms').value;
+  const customTerms = document.getElementById('customPaymentTerms').value;
+  
+  switch(paymentTerms) {
+    case '50-50':
+      return '50% deposit required to secure start date, 50% on completion';
+    case '30-40-30':
+      return '30% deposit required to secure start date, 40% mid-project, 30% on completion';
+    case 'full':
+      return 'Full payment required on completion';
+    case 'custom':
+      return customTerms || 'Payment terms to be agreed';
+    default:
+      return '50% deposit required to secure start date, 50% on completion';
+  }
 }
 
 function generateEstimate() {
@@ -243,7 +426,7 @@ function generateEstimate() {
       // Add section header
       itemsHTML += `
         <tr class="section-header-row">
-          <td colspan="4">${sectionName}</td>
+          <td colspan="5">${sectionName}</td>
         </tr>
       `;
       
@@ -254,11 +437,13 @@ function generateEstimate() {
           const desc = document.getElementById(`itemDesc${sectionId}_${i}`).value;
           const qty = document.getElementById(`itemQty${sectionId}_${i}`).value;
           const rate = parseFloat(document.getElementById(`itemRate${sectionId}_${i}`).value);
+          const type = document.getElementById(`itemType${sectionId}_${i}`).value;
           const total = (qty * rate).toFixed(2);
           
           itemsHTML += `
             <tr>
               <td>${desc}</td>
+              <td style="text-align: center;">${type === 'materials' ? 'M' : 'L'}</td>
               <td>${qty}</td>
               <td>£${rate.toFixed(2)}</td>
               <td>£${total}</td>
@@ -276,9 +461,13 @@ function generateEstimate() {
   const estimateNumber = document.getElementById('estimateNumber').value || 'TBD';
   const customerRef = document.getElementById('customerRef').value || 'N/A';
   
+  const materialsSubtotal = document.getElementById('materialsSubtotalDisplay').textContent;
+  const laborSubtotal = document.getElementById('laborSubtotalDisplay').textContent;
   const subtotal = document.getElementById('subtotalDisplay').textContent;
   const vat = document.getElementById('vatDisplay').textContent;
   const total = document.getElementById('totalDisplay').textContent;
+  
+  const paymentTermsText = getPaymentTermsText();
 
   const estimateHTML = `
     <div class="header">
@@ -323,17 +512,23 @@ function generateEstimate() {
             <td class="detail-value">${customerRef}</td>
           </tr>
           <tr>
-            <td class="detail-label">Expiry Date:</td>
+            <td class="detail-label">Valid Until:</td>
             <td class="expiry-date">${new Date(expiryDate).toLocaleDateString('en-GB')}</td>
           </tr>
         </table>
       </div>
     </div>
 
+    <div style="background: #fff3cd; border-left: 4px solid #d4af37; padding: 12px 15px; margin-bottom: 20px; border-radius: 4px;">
+      <strong style="color: #856404;">⚠ Quote Valid Until: ${new Date(expiryDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</strong>
+      <div style="font-size: 12px; color: #856404; margin-top: 5px;">This quote is valid for 14 days. Prices may change after this date due to material costs.</div>
+    </div>
+
     <table class="items-table">
       <thead>
         <tr>
           <th>Description</th>
+          <th style="text-align: center; width: 60px;">Type</th>
           <th>Qty</th>
           <th>Unit price</th>
           <th>Total price</th>
@@ -344,28 +539,40 @@ function generateEstimate() {
       </tbody>
     </table>
 
+    <div class="payment-terms-section">
+      <h3>Payment Terms</h3>
+      <p>${paymentTermsText}</p>
+    </div>
+
     <div class="notes-section">
-      <h3>Notes:</h3>
+      <h3>Additional Notes:</h3>
       <ol>
-        <li>Estimate valid for 14 days</li>
-        <li>Payment of 50% is required to secure start date</li>
-        <li>Pending to be supplied by customer</li>
-        <li>Any extras to be charged accordingly</li>
+        <li>Materials to be supplied by customer are excluded from this quote</li>
+        <li>Any extras or variations to be charged accordingly</li>
+        <li>All work completed to current building regulations</li>
       </ol>
     </div>
 
     <div class="totals-section-preview">
       <div class="totals-box">
+        <div class="total-row-preview">
+          <span>Materials Subtotal</span>
+          <span>${materialsSubtotal}</span>
+        </div>
+        <div class="total-row-preview">
+          <span>Labor Subtotal</span>
+          <span>${laborSubtotal}</span>
+        </div>
         <div class="total-row-preview subtotal">
           <span>Subtotal</span>
           <span>${subtotal}</span>
         </div>
         <div class="total-row-preview vat">
-          <span>VAT</span>
+          <span>VAT (20%)</span>
           <span>${vat}</span>
         </div>
         <div class="total-row-preview final">
-          <span>Total</span>
+          <span>Total Amount</span>
           <span>${total}</span>
         </div>
       </div>

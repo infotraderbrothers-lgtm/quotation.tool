@@ -151,6 +151,11 @@ function generateCompleteHTML() {
         color: #333;
       }
       
+      .a4-container {
+        width: 100%;
+        background: white;
+      }
+      
       .header {
         display: flex;
         justify-content: space-between;
@@ -165,7 +170,7 @@ function generateCompleteHTML() {
       }
       
       .company-name {
-        font-size: 24px;
+        font-size: 28px;
         font-weight: bold;
         margin-bottom: 10px;
         color: #333;
@@ -176,7 +181,7 @@ function generateCompleteHTML() {
       }
       
       .company-details {
-        font-size: 11px;
+        font-size: 12px;
         line-height: 1.6;
         color: #666;
       }
@@ -186,7 +191,7 @@ function generateCompleteHTML() {
       }
       
       .logo {
-        width: 120px;
+        width: 140px;
         height: auto;
         display: block;
       }
@@ -219,7 +224,7 @@ function generateCompleteHTML() {
       }
       
       .client-info p {
-        font-size: 15px;
+        font-size: 13px;
         line-height: 1.6;
         color: #333;
         font-weight: 500;
@@ -258,6 +263,24 @@ function generateCompleteHTML() {
         color: white;
         font-weight: bold;
       }
+
+      .expiry-warning {
+        background: #fff3cd;
+        border-left: 4px solid #d4af37;
+        padding: 12px 15px;
+        margin-bottom: 20px;
+        border-radius: 4px;
+      }
+
+      .expiry-warning strong {
+        color: #856404;
+      }
+
+      .expiry-warning-text {
+        font-size: 12px;
+        color: #856404;
+        margin-top: 5px;
+      }
       
       .items-table {
         width: 100%;
@@ -288,7 +311,7 @@ function generateCompleteHTML() {
       
       .items-table td {
         padding: 8px 12px;
-        font-size: 12px;
+        font-size: 13px;
         font-weight: normal;
         border-bottom: 1px solid #f0f0f0;
         color: #555;

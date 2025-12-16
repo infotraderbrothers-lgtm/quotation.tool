@@ -48,6 +48,10 @@
           <label>Material Markup (%)</label>
           <input type="number" id="materialMarkup" value="20" step="5">
         </div>
+        <div class="form-group">
+          <label>Labor Markup (%)</label>
+          <input type="number" id="laborMarkup" value="15" step="5">
+        </div>
       </div>
     </div>
 
@@ -76,7 +80,7 @@
           <input type="text" id="clientPostcode">
         </div>
         <div class="form-group">
-          <label>Valid Until</label>
+          <label>Valid Until (Auto: 14 days)</label>
           <input type="date" id="expiryDate">
         </div>
         <div class="form-group">
@@ -88,6 +92,28 @@
           <input type="text" id="customerRef" placeholder="Optional">
         </div>
       </div>
+      
+      <!-- Payment Terms Section -->
+      <div style="margin-top: 20px;">
+        <label style="font-size: 13px; font-weight: bold; color: #333; margin-bottom: 8px; display: block;">Payment Terms *</label>
+        <select id="paymentTerms" style="width: 100%; padding: 10px; font-size: 14px; border: 1px solid #ddd; border-radius: 4px;">
+          <option value="50-50">50% deposit, 50% on completion</option>
+          <option value="30-40-30">30% deposit, 40% mid-project, 30% completion</option>
+          <option value="full">Full payment on completion</option>
+          <option value="custom">Custom terms</option>
+        </select>
+        <textarea id="customPaymentTerms" placeholder="Enter custom payment terms here..." style="width: 100%; margin-top: 10px; padding: 10px; font-size: 14px; border: 1px solid #ddd; border-radius: 4px; min-height: 60px; display: none;"></textarea>
+      </div>
+    </div>
+
+    <!-- Quick-Add Item Library -->
+    <div class="form-section">
+      <div class="section-title">Quick-Add Item Library</div>
+      <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+        <input type="text" id="librarySearch" placeholder="Search services..." style="flex: 1; padding: 10px; font-size: 14px; border: 1px solid #ddd; border-radius: 4px;">
+        <button onclick="openLibraryManager()" class="btn-secondary" style="white-space: nowrap;">Manage Library</button>
+      </div>
+      <div id="libraryItems" class="library-items-grid"></div>
     </div>
 
     <!-- Line Items with Sections -->
@@ -101,6 +127,14 @@
     <div class="totals-section">
       <div class="totals-grid">
         <div class="total-row">
+          <span>Materials Subtotal:</span>
+          <span id="materialsSubtotalDisplay">£0.00</span>
+        </div>
+        <div class="total-row">
+          <span>Labor Subtotal:</span>
+          <span id="laborSubtotalDisplay">£0.00</span>
+        </div>
+        <div class="total-row" style="border-top: 1px solid #ddd; padding-top: 10px; margin-top: 5px;">
           <span>Subtotal:</span>
           <span id="subtotalDisplay">£0.00</span>
         </div>
@@ -133,6 +167,46 @@
         <div class="modal-footer">
           <button class="btn-secondary" onclick="closePreviewModal()">Close</button>
           <button class="btn-primary" onclick="generatePDF(event)" id="downloadPdfBtn">Download PDF</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Library Manager Modal -->
+    <div id="libraryModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Manage Item Library</h2>
+          <span class="close" onclick="closeLibraryManager()">&times;</span>
+        </div>
+        <div class="modal-body">
+          <div style="margin-bottom: 20px;">
+            <h3 style="font-size: 14px; margin-bottom: 10px;">Add New Service</h3>
+            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 100px; gap: 10px; align-items: end;">
+              <div>
+                <label style="font-size: 12px; font-weight: bold; color: #333; margin-bottom: 5px; display: block;">Description</label>
+                <input type="text" id="newLibraryDesc" placeholder="Service description" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+              </div>
+              <div>
+                <label style="font-size: 12px; font-weight: bold; color: #333; margin-bottom: 5px; display: block;">Default Price (£)</label>
+                <input type="number" id="newLibraryPrice" placeholder="0.00" step="0.01" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+              </div>
+              <div>
+                <label style="font-size: 12px; font-weight: bold; color: #333; margin-bottom: 5px; display: block;">Type</label>
+                <select id="newLibraryType" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                  <option value="materials">Materials</option>
+                  <option value="labor">Labor</option>
+                </select>
+              </div>
+              <button onclick="addLibraryItem()" class="btn-primary" style="padding: 8px 15px; font-size: 13px;">Add</button>
+            </div>
+          </div>
+          <div>
+            <h3 style="font-size: 14px; margin-bottom: 10px;">Your Services</h3>
+            <div id="libraryManagerList" style="max-height: 400px; overflow-y: auto;"></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" onclick="closeLibraryManager()">Close</button>
         </div>
       </div>
     </div>

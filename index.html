@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- ENHANCED VIEWPORT: Optimized for narrow screens like Samsung Fold cover display -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
   <title>Trader Brothers - Professional Tools</title>
   
   <!-- PWA Meta Tags -->
@@ -12,6 +13,9 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="TB Quotes">
   <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/infotraderbrothers-lgtm/traderbrothers-assets-logo/main/Trader%20Brothers.png">
+  
+  <!-- Safe area insets for notched/folded devices -->
+  <meta name="mobile-web-app-capable" content="yes">
   
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="splash.css">
@@ -192,9 +196,9 @@
       <!-- Quick-Add Item Library -->
       <div class="form-section">
         <div class="section-title">Quick-Add Item Library</div>
-        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-          <input type="text" id="librarySearch" placeholder="Search services..." style="flex: 1; padding: 10px; font-size: 14px; border: 1px solid #ddd; border-radius: 4px;">
-          <button onclick="openLibraryManager()" class="btn-secondary" style="white-space: nowrap;">Manage Library</button>
+        <div class="library-search-container">
+          <input type="text" id="librarySearch" placeholder="Search services..." class="library-search-input">
+          <button onclick="openLibraryManager()" class="btn-secondary library-manage-btn">Manage Library</button>
         </div>
         <div id="libraryItems" class="library-items-grid"></div>
       </div>
@@ -264,7 +268,7 @@
           <div class="modal-body">
             <div style="margin-bottom: 20px;">
               <h3 style="font-size: 14px; margin-bottom: 10px;">Add New Service</h3>
-              <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 100px; gap: 10px; align-items: end;">
+              <div class="library-add-grid">
                 <div>
                   <label style="font-size: 12px; font-weight: bold; color: #333; margin-bottom: 5px; display: block;">Description</label>
                   <input type="text" id="newLibraryDesc" placeholder="Service description" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
@@ -280,7 +284,7 @@
                     <option value="labor">Labor</option>
                   </select>
                 </div>
-                <button onclick="addLibraryItem()" class="btn-primary" style="padding: 8px 15px; font-size: 13px;">Add</button>
+                <button onclick="addLibraryItem()" class="btn-primary" style="padding: 8px 15px; font-size: 13px; align-self: end;">Add</button>
               </div>
             </div>
             <div>

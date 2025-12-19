@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quotation System - Trader Brothers Ltd</title>
+  <title>Trader Brothers - Professional Tools</title>
   
   <!-- PWA Meta Tags -->
   <link rel="manifest" href="/manifest.json">
@@ -14,202 +14,285 @@
   <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/infotraderbrothers-lgtm/traderbrothers-assets-logo/main/Trader%20Brothers.png">
   
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="splash.css">
 </head>
 <body>
-  <div class="container">
-    <!-- Header -->
-    <div class="header">
-      <div class="company-info">
-        <div class="company-name">TR<span class="highlight">A</span>DER BROTHERS LTD</div>
-      </div>
-      <div class="logo-container">
-        <img src="https://raw.githubusercontent.com/infotraderbrothers-lgtm/traderbrothers-assets-logo/main/Trader%20Brothers.png" alt="Trader Brothers Logo" class="logo">
+  
+  <!-- SPLASH SCREEN -->
+  <div id="splashScreen" class="splash-screen active">
+    <div class="splash-content">
+      <img src="https://raw.githubusercontent.com/infotraderbrothers-lgtm/traderbrothers-assets-logo/main/Trader%20Brothers.png" alt="Trader Brothers Logo" class="splash-logo">
+      <div class="splash-company-name">TR<span class="splash-highlight">A</span>DER BROTHERS LTD</div>
+      <div class="splash-tagline">Professional Trade Solutions</div>
+      <div class="splash-loader"></div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD SCREEN -->
+  <div id="dashboardScreen" class="dashboard-screen">
+    <div class="dashboard-header">
+      <img src="https://raw.githubusercontent.com/infotraderbrothers-lgtm/traderbrothers-assets-logo/main/Trader%20Brothers.png" alt="Trader Brothers Logo" class="dashboard-logo">
+      <div class="dashboard-title">TR<span class="highlight">A</span>DER BROTHERS</div>
+    </div>
+
+    <div class="dashboard-content">
+      <h1 class="dashboard-welcome">Welcome to Your Workspace</h1>
+      <p class="dashboard-subtitle">Select a tool to get started</p>
+
+      <div class="tools-grid">
+        <!-- Active Tool -->
+        <div class="tool-card active" onclick="navigateToQuotation()">
+          <div class="tool-icon">📋</div>
+          <h2 class="tool-title">Create A Quote</h2>
+          <p class="tool-description">Generate professional estimates and quotations for your clients</p>
+          <div class="tool-status active">Available</div>
+        </div>
+
+        <!-- Coming Soon Tools -->
+        <div class="tool-card coming-soon">
+          <div class="tool-icon">📊</div>
+          <h2 class="tool-title">Invoice Manager</h2>
+          <p class="tool-description">Create and track invoices for completed projects</p>
+          <div class="tool-status">Coming Soon</div>
+        </div>
+
+        <div class="tool-card coming-soon">
+          <div class="tool-icon">👥</div>
+          <h2 class="tool-title">Client Database</h2>
+          <p class="tool-description">Manage client information and project history</p>
+          <div class="tool-status">Coming Soon</div>
+        </div>
+
+        <div class="tool-card coming-soon">
+          <div class="tool-icon">📈</div>
+          <h2 class="tool-title">Reports & Analytics</h2>
+          <p class="tool-description">View business insights and financial reports</p>
+          <div class="tool-status">Coming Soon</div>
+        </div>
+
+        <div class="tool-card coming-soon">
+          <div class="tool-icon">🔧</div>
+          <h2 class="tool-title">Project Scheduler</h2>
+          <p class="tool-description">Plan and schedule upcoming projects</p>
+          <div class="tool-status">Coming Soon</div>
+        </div>
+
+        <div class="tool-card coming-soon">
+          <div class="tool-icon">💰</div>
+          <h2 class="tool-title">Expense Tracker</h2>
+          <p class="tool-description">Track materials and labor costs</p>
+          <div class="tool-status">Coming Soon</div>
+        </div>
       </div>
     </div>
 
-    <!-- Template Selector -->
-    <div class="form-section template-selector">
-      <label style="font-size: 13px; font-weight: bold; color: #333; margin-bottom: 10px; display: block;">Quick Start Template:</label>
-      <select id="templateSelect" style="width: 100%; padding: 10px; font-size: 14px; border: 1px solid #ddd; border-radius: 4px;">
-        <option value="">-- Start from scratch --</option>
-        <option value="bathroom">Bathroom Renovation</option>
-        <option value="kitchen">Kitchen Rewire</option>
-        <option value="extension">Extension Build</option>
-        <option value="plumbing">General Plumbing Work</option>
-      </select>
+    <div class="dashboard-footer">
+      <p>© 2024 Trader Brothers Ltd. All rights reserved.</p>
+    </div>
+  </div>
+
+  <!-- QUOTATION TOOL SCREEN -->
+  <div id="quotationScreen" class="quotation-screen">
+    <div class="quotation-nav">
+      <button class="back-button" onclick="navigateToDashboard()">← Back to Dashboard</button>
+      <div class="nav-title">Quotation System</div>
     </div>
 
-    <!-- Rate Settings -->
-    <div class="rate-settings">
-      <h3 style="font-size: 14px; margin-bottom: 15px; color: #333;">Labor Rate & Markup Settings</h3>
-      <div class="markup-grid">
-        <div class="form-group">
-          <label>Hourly Rate (£)</label>
-          <input type="number" id="hourlyRate" value="45" step="5">
+    <div class="container">
+      <!-- Header -->
+      <div class="header">
+        <div class="company-info">
+          <div class="company-name">TR<span class="highlight">A</span>DER BROTHERS LTD</div>
         </div>
-        <div class="form-group">
-          <label>Material Markup (%)</label>
-          <input type="number" id="materialMarkup" value="20" step="5">
-        </div>
-        <div class="form-group">
-          <label>Labor Markup (%)</label>
-          <input type="number" id="laborMarkup" value="15" step="5">
+        <div class="logo-container">
+          <img src="https://raw.githubusercontent.com/infotraderbrothers-lgtm/traderbrothers-assets-logo/main/Trader%20Brothers.png" alt="Trader Brothers Logo" class="logo">
         </div>
       </div>
-    </div>
 
-    <!-- Client Information -->
-    <div class="form-section">
-      <div class="section-title">Client Information</div>
-      <div class="form-grid">
-        <div class="form-group">
-          <label>Client Name *</label>
-          <input type="text" id="clientName" required>
-        </div>
-        <div class="form-group">
-          <label>Quote Date *</label>
-          <input type="date" id="quoteDate" required>
-        </div>
-        <div class="form-group">
-          <label>Street Address</label>
-          <input type="text" id="clientAddress">
-        </div>
-        <div class="form-group">
-          <label>City</label>
-          <input type="text" id="clientCity">
-        </div>
-        <div class="form-group">
-          <label>Postcode</label>
-          <input type="text" id="clientPostcode">
-        </div>
-        <div class="form-group">
-          <label>Valid Until (Auto: 14 days)</label>
-          <input type="date" id="expiryDate">
-        </div>
-        <div class="form-group">
-          <label>Estimate Number</label>
-          <input type="text" id="estimateNumber" placeholder="e.g., EST-001">
-        </div>
-        <div class="form-group">
-          <label>Customer Reference</label>
-          <input type="text" id="customerRef" placeholder="Optional">
-        </div>
-      </div>
-      
-      <!-- Payment Terms Section -->
-      <div style="margin-top: 20px;">
-        <label style="font-size: 13px; font-weight: bold; color: #333; margin-bottom: 8px; display: block;">Payment Terms *</label>
-        <select id="paymentTerms" style="width: 100%; padding: 10px; font-size: 14px; border: 1px solid #ddd; border-radius: 4px;">
-          <option value="50-50">50% deposit, 50% on completion</option>
-          <option value="30-40-30">30% deposit, 40% mid-project, 30% completion</option>
-          <option value="full">Full payment on completion</option>
-          <option value="custom">Custom terms</option>
+      <!-- Template Selector -->
+      <div class="form-section template-selector">
+        <label style="font-size: 13px; font-weight: bold; color: #333; margin-bottom: 10px; display: block;">Quick Start Template:</label>
+        <select id="templateSelect" style="width: 100%; padding: 10px; font-size: 14px; border: 1px solid #ddd; border-radius: 4px;">
+          <option value="">-- Start from scratch --</option>
+          <option value="bathroom">Bathroom Renovation</option>
+          <option value="kitchen">Kitchen Rewire</option>
+          <option value="extension">Extension Build</option>
+          <option value="plumbing">General Plumbing Work</option>
         </select>
-        <textarea id="customPaymentTerms" placeholder="Enter custom payment terms here..." style="width: 100%; margin-top: 10px; padding: 10px; font-size: 14px; border: 1px solid #ddd; border-radius: 4px; min-height: 60px; display: none;"></textarea>
       </div>
-    </div>
 
-    <!-- Quick-Add Item Library -->
-    <div class="form-section">
-      <div class="section-title">Quick-Add Item Library</div>
-      <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-        <input type="text" id="librarySearch" placeholder="Search services..." style="flex: 1; padding: 10px; font-size: 14px; border: 1px solid #ddd; border-radius: 4px;">
-        <button onclick="openLibraryManager()" class="btn-secondary" style="white-space: nowrap;">Manage Library</button>
-      </div>
-      <div id="libraryItems" class="library-items-grid"></div>
-    </div>
-
-    <!-- Line Items with Sections -->
-    <div class="items-section">
-      <div class="section-title">Quote Items (Organized by Section)</div>
-      <div id="sectionsContainer"></div>
-      <button class="add-section-btn" onclick="addSection()">+ Add New Section</button>
-    </div>
-
-    <!-- Totals -->
-    <div class="totals-section">
-      <div class="totals-grid">
-        <div class="total-row">
-          <span>Materials Subtotal:</span>
-          <span id="materialsSubtotalDisplay">£0.00</span>
-        </div>
-        <div class="total-row">
-          <span>Labor Subtotal:</span>
-          <span id="laborSubtotalDisplay">£0.00</span>
-        </div>
-        <div class="total-row" style="border-top: 1px solid #ddd; padding-top: 10px; margin-top: 5px;">
-          <span>Subtotal:</span>
-          <span id="subtotalDisplay">£0.00</span>
-        </div>
-        <div class="total-row">
-          <span>VAT:</span>
-          <span id="vatDisplay">£0.00</span>
-        </div>
-        <div class="total-row final">
-          <span>Total Amount:</span>
-          <span class="amount" id="totalDisplay">£0.00</span>
+      <!-- Rate Settings -->
+      <div class="rate-settings">
+        <h3 style="font-size: 14px; margin-bottom: 15px; color: #333;">Labor Rate & Markup Settings</h3>
+        <div class="markup-grid">
+          <div class="form-group">
+            <label>Hourly Rate (£)</label>
+            <input type="number" id="hourlyRate" value="45" step="5">
+          </div>
+          <div class="form-group">
+            <label>Material Markup (%)</label>
+            <input type="number" id="materialMarkup" value="20" step="5">
+          </div>
+          <div class="form-group">
+            <label>Labor Markup (%)</label>
+            <input type="number" id="laborMarkup" value="15" step="5">
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Actions -->
-    <div class="actions">
-      <button class="btn-primary" onclick="generateEstimate()">Generate Estimate Preview</button>
-    </div>
-
-    <!-- Modal for Estimate Preview -->
-    <div id="previewModal" class="modal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h2>Estimate Preview</h2>
-          <span class="close" onclick="closePreviewModal()">&times;</span>
+      <!-- Client Information -->
+      <div class="form-section">
+        <div class="section-title">Client Information</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Client Name *</label>
+            <input type="text" id="clientName" required>
+          </div>
+          <div class="form-group">
+            <label>Quote Date *</label>
+            <input type="date" id="quoteDate" required>
+          </div>
+          <div class="form-group">
+            <label>Street Address</label>
+            <input type="text" id="clientAddress">
+          </div>
+          <div class="form-group">
+            <label>City</label>
+            <input type="text" id="clientCity">
+          </div>
+          <div class="form-group">
+            <label>Postcode</label>
+            <input type="text" id="clientPostcode">
+          </div>
+          <div class="form-group">
+            <label>Valid Until (Auto: 14 days)</label>
+            <input type="date" id="expiryDate">
+          </div>
+          <div class="form-group">
+            <label>Estimate Number</label>
+            <input type="text" id="estimateNumber" placeholder="e.g., EST-001">
+          </div>
+          <div class="form-group">
+            <label>Customer Reference</label>
+            <input type="text" id="customerRef" placeholder="Optional">
+          </div>
         </div>
-        <div class="modal-body">
-          <div class="estimate-container" id="estimateContainer"></div>
-        </div>
-        <div class="modal-footer">
-          <button class="btn-secondary" onclick="closePreviewModal()">Close</button>
-          <button class="btn-primary" onclick="generatePDF(event)" id="downloadPdfBtn">Download PDF</button>
+        
+        <!-- Payment Terms Section -->
+        <div style="margin-top: 20px;">
+          <label style="font-size: 13px; font-weight: bold; color: #333; margin-bottom: 8px; display: block;">Payment Terms *</label>
+          <select id="paymentTerms" style="width: 100%; padding: 10px; font-size: 14px; border: 1px solid #ddd; border-radius: 4px;">
+            <option value="50-50">50% deposit, 50% on completion</option>
+            <option value="30-40-30">30% deposit, 40% mid-project, 30% completion</option>
+            <option value="full">Full payment on completion</option>
+            <option value="custom">Custom terms</option>
+          </select>
+          <textarea id="customPaymentTerms" placeholder="Enter custom payment terms here..." style="width: 100%; margin-top: 10px; padding: 10px; font-size: 14px; border: 1px solid #ddd; border-radius: 4px; min-height: 60px; display: none;"></textarea>
         </div>
       </div>
-    </div>
 
-    <!-- Library Manager Modal -->
-    <div id="libraryModal" class="modal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h2>Manage Item Library</h2>
-          <span class="close" onclick="closeLibraryManager()">&times;</span>
+      <!-- Quick-Add Item Library -->
+      <div class="form-section">
+        <div class="section-title">Quick-Add Item Library</div>
+        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+          <input type="text" id="librarySearch" placeholder="Search services..." style="flex: 1; padding: 10px; font-size: 14px; border: 1px solid #ddd; border-radius: 4px;">
+          <button onclick="openLibraryManager()" class="btn-secondary" style="white-space: nowrap;">Manage Library</button>
         </div>
-        <div class="modal-body">
-          <div style="margin-bottom: 20px;">
-            <h3 style="font-size: 14px; margin-bottom: 10px;">Add New Service</h3>
-            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 100px; gap: 10px; align-items: end;">
-              <div>
-                <label style="font-size: 12px; font-weight: bold; color: #333; margin-bottom: 5px; display: block;">Description</label>
-                <input type="text" id="newLibraryDesc" placeholder="Service description" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+        <div id="libraryItems" class="library-items-grid"></div>
+      </div>
+
+      <!-- Line Items with Sections -->
+      <div class="items-section">
+        <div class="section-title">Quote Items (Organized by Section)</div>
+        <div id="sectionsContainer"></div>
+        <button class="add-section-btn" onclick="addSection()">+ Add New Section</button>
+      </div>
+
+      <!-- Totals -->
+      <div class="totals-section">
+        <div class="totals-grid">
+          <div class="total-row">
+            <span>Materials Subtotal:</span>
+            <span id="materialsSubtotalDisplay">£0.00</span>
+          </div>
+          <div class="total-row">
+            <span>Labor Subtotal:</span>
+            <span id="laborSubtotalDisplay">£0.00</span>
+          </div>
+          <div class="total-row" style="border-top: 1px solid #ddd; padding-top: 10px; margin-top: 5px;">
+            <span>Subtotal:</span>
+            <span id="subtotalDisplay">£0.00</span>
+          </div>
+          <div class="total-row">
+            <span>VAT:</span>
+            <span id="vatDisplay">£0.00</span>
+          </div>
+          <div class="total-row final">
+            <span>Total Amount:</span>
+            <span class="amount" id="totalDisplay">£0.00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="actions">
+        <button class="btn-primary" onclick="generateEstimate()">Generate Estimate Preview</button>
+      </div>
+
+      <!-- Modal for Estimate Preview -->
+      <div id="previewModal" class="modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2>Estimate Preview</h2>
+            <span class="close" onclick="closePreviewModal()">&times;</span>
+          </div>
+          <div class="modal-body">
+            <div class="estimate-container" id="estimateContainer"></div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn-secondary" onclick="closePreviewModal()">Close</button>
+            <button class="btn-primary" onclick="generatePDF(event)" id="downloadPdfBtn">Download PDF</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Library Manager Modal -->
+      <div id="libraryModal" class="modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2>Manage Item Library</h2>
+            <span class="close" onclick="closeLibraryManager()">&times;</span>
+          </div>
+          <div class="modal-body">
+            <div style="margin-bottom: 20px;">
+              <h3 style="font-size: 14px; margin-bottom: 10px;">Add New Service</h3>
+              <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 100px; gap: 10px; align-items: end;">
+                <div>
+                  <label style="font-size: 12px; font-weight: bold; color: #333; margin-bottom: 5px; display: block;">Description</label>
+                  <input type="text" id="newLibraryDesc" placeholder="Service description" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+                <div>
+                  <label style="font-size: 12px; font-weight: bold; color: #333; margin-bottom: 5px; display: block;">Default Price (£)</label>
+                  <input type="number" id="newLibraryPrice" placeholder="0.00" step="0.01" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+                <div>
+                  <label style="font-size: 12px; font-weight: bold; color: #333; margin-bottom: 5px; display: block;">Type</label>
+                  <select id="newLibraryType" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    <option value="materials">Materials</option>
+                    <option value="labor">Labor</option>
+                  </select>
+                </div>
+                <button onclick="addLibraryItem()" class="btn-primary" style="padding: 8px 15px; font-size: 13px;">Add</button>
               </div>
-              <div>
-                <label style="font-size: 12px; font-weight: bold; color: #333; margin-bottom: 5px; display: block;">Default Price (£)</label>
-                <input type="number" id="newLibraryPrice" placeholder="0.00" step="0.01" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-              </div>
-              <div>
-                <label style="font-size: 12px; font-weight: bold; color: #333; margin-bottom: 5px; display: block;">Type</label>
-                <select id="newLibraryType" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-                  <option value="materials">Materials</option>
-                  <option value="labor">Labor</option>
-                </select>
-              </div>
-              <button onclick="addLibraryItem()" class="btn-primary" style="padding: 8px 15px; font-size: 13px;">Add</button>
+            </div>
+            <div>
+              <h3 style="font-size: 14px; margin-bottom: 10px;">Your Services</h3>
+              <div id="libraryManagerList" style="max-height: 400px; overflow-y: auto;"></div>
             </div>
           </div>
-          <div>
-            <h3 style="font-size: 14px; margin-bottom: 10px;">Your Services</h3>
-            <div id="libraryManagerList" style="max-height: 400px; overflow-y: auto;"></div>
+          <div class="modal-footer">
+            <button class="btn-secondary" onclick="closeLibraryManager()">Close</button>
           </div>
-        </div>
-        <div class="modal-footer">
-          <button class="btn-secondary" onclick="closeLibraryManager()">Close</button>
         </div>
       </div>
     </div>
@@ -217,6 +300,7 @@
 
   <script src="script.js"></script>
   <script src="pdf-generator.js"></script>
+  <script src="navigation.js"></script>
   
   <!-- Service Worker Registration -->
   <script>

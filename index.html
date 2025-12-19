@@ -2,20 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <!-- ENHANCED VIEWPORT: Optimized for narrow screens like Samsung Fold cover display -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
-  <title>Trader Brothers - Professional Tools</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Professional Quotation System</title>
   
   <!-- PWA Meta Tags -->
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#d4af37">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="TB Quotes">
+  <meta name="apple-mobile-web-app-title" content="Quotation Pro">
   <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/infotraderbrothers-lgtm/traderbrothers-assets-logo/main/Trader%20Brothers.png">
-  
-  <!-- Safe area insets for notched/folded devices -->
-  <meta name="mobile-web-app-capable" content="yes">
   
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="splash.css">
@@ -25,24 +21,179 @@
   <!-- SPLASH SCREEN -->
   <div id="splashScreen" class="splash-screen active">
     <div class="splash-content">
-      <img src="https://raw.githubusercontent.com/infotraderbrothers-lgtm/traderbrothers-assets-logo/main/Trader%20Brothers.png" alt="Trader Brothers Logo" class="splash-logo">
-      <div class="splash-loader"></div>
+      <img id="splashLogo" src="https://raw.githubusercontent.com/infotraderbrothers-lgtm/traderbrothers-assets-logo/main/Trader%20Brothers.png" alt="Logo" class="splash-logo">
+    </div>
+  </div>
+
+  <!-- COMPANY SETUP SCREEN -->
+  <div id="setupScreen" class="setup-screen">
+    <div class="setup-container">
+      <div class="setup-header">
+        <h1>Welcome! Let's Set Up Your Company</h1>
+        <p>Customize your branding and company information</p>
+      </div>
+
+      <div class="setup-content">
+        <!-- Company Information -->
+        <div class="setup-section">
+          <h2>Company Information</h2>
+          <div class="setup-grid">
+            <div class="setup-field">
+              <label>Company Name *</label>
+              <input type="text" id="setupCompanyName" placeholder="e.g., Smith Plumbing Ltd" required>
+            </div>
+            <div class="setup-field">
+              <label>Phone Number *</label>
+              <input type="tel" id="setupPhone" placeholder="e.g., 07123456789" required>
+            </div>
+            <div class="setup-field">
+              <label>Email Address *</label>
+              <input type="email" id="setupEmail" placeholder="e.g., info@company.com" required>
+            </div>
+            <div class="setup-field">
+              <label>Website (Optional)</label>
+              <input type="url" id="setupWebsite" placeholder="e.g., www.company.com">
+            </div>
+            <div class="setup-field full-width">
+              <label>Street Address *</label>
+              <input type="text" id="setupAddress" placeholder="e.g., 123 Business Park" required>
+            </div>
+            <div class="setup-field">
+              <label>City *</label>
+              <input type="text" id="setupCity" placeholder="e.g., Glasgow" required>
+            </div>
+            <div class="setup-field">
+              <label>Postcode *</label>
+              <input type="text" id="setupPostcode" placeholder="e.g., G52 4XZ" required>
+            </div>
+            <div class="setup-field">
+              <label>VAT Number (Optional)</label>
+              <input type="text" id="setupVAT" placeholder="e.g., GB123456789">
+            </div>
+            <div class="setup-field">
+              <label>Company Reg. No. (Optional)</label>
+              <input type="text" id="setupRegNo" placeholder="e.g., SC123456">
+            </div>
+          </div>
+        </div>
+
+        <!-- Logo Upload -->
+        <div class="setup-section">
+          <h2>Company Logo</h2>
+          <div class="logo-upload-container">
+            <div class="logo-preview">
+              <img id="logoPreview" src="https://via.placeholder.com/200x200?text=Upload+Logo" alt="Logo Preview">
+            </div>
+            <div class="logo-upload-controls">
+              <input type="file" id="logoUpload" accept="image/*" style="display: none;">
+              <button class="btn-upload" onclick="document.getElementById('logoUpload').click()">Choose Logo File</button>
+              <p class="upload-hint">Recommended: Square image (PNG or JPG, max 2MB)</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Color Scheme -->
+        <div class="setup-section">
+          <h2>Color Scheme</h2>
+          <div class="color-presets">
+            <div class="preset-option" data-colors='{"primary":"#d4af37","secondary":"#bc9c22"}' onclick="selectColorPreset(this)">
+              <div class="preset-colors">
+                <div class="preset-color" style="background: #d4af37;"></div>
+                <div class="preset-color" style="background: #bc9c22;"></div>
+              </div>
+              <span>Classic Gold</span>
+            </div>
+            <div class="preset-option" data-colors='{"primary":"#3498db","secondary":"#2980b9"}' onclick="selectColorPreset(this)">
+              <div class="preset-colors">
+                <div class="preset-color" style="background: #3498db;"></div>
+                <div class="preset-color" style="background: #2980b9;"></div>
+              </div>
+              <span>Professional Blue</span>
+            </div>
+            <div class="preset-option" data-colors='{"primary":"#27ae60","secondary":"#229954"}' onclick="selectColorPreset(this)">
+              <div class="preset-colors">
+                <div class="preset-color" style="background: #27ae60;"></div>
+                <div class="preset-color" style="background: #229954;"></div>
+              </div>
+              <span>Modern Green</span>
+            </div>
+            <div class="preset-option" data-colors='{"primary":"#e74c3c","secondary":"#c0392b"}' onclick="selectColorPreset(this)">
+              <div class="preset-colors">
+                <div class="preset-color" style="background: #e74c3c;"></div>
+                <div class="preset-color" style="background: #c0392b;"></div>
+              </div>
+              <span>Bold Red</span>
+            </div>
+            <div class="preset-option" data-colors='{"primary":"#9b59b6","secondary":"#8e44ad"}' onclick="selectColorPreset(this)">
+              <div class="preset-colors">
+                <div class="preset-color" style="background: #9b59b6;"></div>
+                <div class="preset-color" style="background: #8e44ad;"></div>
+              </div>
+              <span>Royal Purple</span>
+            </div>
+            <div class="preset-option" data-colors='{"primary":"#34495e","secondary":"#2c3e50"}' onclick="selectColorPreset(this)">
+              <div class="preset-colors">
+                <div class="preset-color" style="background: #34495e;"></div>
+                <div class="preset-color" style="background: #2c3e50;"></div>
+              </div>
+              <span>Corporate Grey</span>
+            </div>
+          </div>
+          <div class="custom-colors">
+            <div class="color-picker-group">
+              <label>Primary Color</label>
+              <input type="color" id="primaryColor" value="#d4af37">
+            </div>
+            <div class="color-picker-group">
+              <label>Secondary Color</label>
+              <input type="color" id="secondaryColor" value="#bc9c22">
+            </div>
+          </div>
+        </div>
+
+        <!-- Default Settings -->
+        <div class="setup-section">
+          <h2>Default Invoice Settings</h2>
+          <div class="setup-grid">
+            <div class="setup-field full-width">
+              <label>Default Payment Terms</label>
+              <select id="setupPaymentTerms">
+                <option value="50-50">50% deposit, 50% on completion</option>
+                <option value="30-40-30">30% deposit, 40% mid-project, 30% completion</option>
+                <option value="full">Full payment on completion</option>
+              </select>
+            </div>
+            <div class="setup-field full-width">
+              <label>Additional Notes (Optional)</label>
+              <textarea id="setupNotes" rows="3" placeholder="e.g., Bank details, special terms, etc."></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="setup-actions">
+        <button class="btn-secondary" onclick="skipSetup()">Skip for Now (Use Defaults)</button>
+        <button class="btn-primary" onclick="saveSetup()">Save & Continue</button>
+      </div>
     </div>
   </div>
 
   <!-- DASHBOARD SCREEN -->
   <div id="dashboardScreen" class="dashboard-screen">
     <div class="dashboard-header">
-      <img src="https://raw.githubusercontent.com/infotraderbrothers-lgtm/traderbrothers-assets-logo/main/Trader%20Brothers.png" alt="Trader Brothers Logo" class="dashboard-logo">
-      <div class="dashboard-title">TR<span class="highlight">A</span>DER BROTHERS</div>
+      <img id="dashboardLogo" src="" alt="Company Logo" class="dashboard-logo">
+      <div id="dashboardTitle" class="dashboard-title"></div>
+      <div class="dashboard-controls">
+        <button class="theme-toggle" onclick="toggleDarkMode()" title="Toggle Dark Mode">🌓</button>
+        <button class="settings-btn" onclick="openSettings()">⚙️ Settings</button>
+      </div>
     </div>
 
     <div class="dashboard-content">
-      <h1 class="dashboard-welcome">Welcome to Your Workspace</h1>
+      <h1 id="dashboardWelcome" class="dashboard-welcome">Welcome to Your Workspace</h1>
       <p class="dashboard-subtitle">Select a tool to get started</p>
 
       <div class="tools-grid">
-        <!-- Active Tool -->
         <div class="tool-card active" onclick="navigateToQuotation()">
           <div class="tool-icon">📋</div>
           <h2 class="tool-title">Create A Quote</h2>
@@ -50,7 +201,6 @@
           <div class="tool-status active">Available</div>
         </div>
 
-        <!-- Coming Soon Tools -->
         <div class="tool-card coming-soon">
           <div class="tool-icon">📊</div>
           <h2 class="tool-title">Invoice Manager</h2>
@@ -89,7 +239,7 @@
     </div>
 
     <div class="dashboard-footer">
-      <p>© 2024 Trader Brothers Ltd. All rights reserved.</p>
+      <p id="dashboardFooter">© 2024 All rights reserved.</p>
     </div>
   </div>
 
@@ -97,21 +247,19 @@
   <div id="quotationScreen" class="quotation-screen">
     <div class="quotation-nav">
       <button class="back-button" onclick="navigateToDashboard()">← Back to Dashboard</button>
-      <div class="nav-title">Quotation System</div>
+      <div id="quotationNavTitle" class="nav-title">Quotation System</div>
     </div>
 
     <div class="container">
-      <!-- Header -->
       <div class="header">
         <div class="company-info">
-          <div class="company-name">TR<span class="highlight">A</span>DER BROTHERS LTD</div>
+          <div id="quotationCompanyName" class="company-name"></div>
         </div>
         <div class="logo-container">
-          <img src="https://raw.githubusercontent.com/infotraderbrothers-lgtm/traderbrothers-assets-logo/main/Trader%20Brothers.png" alt="Trader Brothers Logo" class="logo">
+          <img id="quotationLogo" src="" alt="Company Logo" class="logo">
         </div>
       </div>
 
-      <!-- Template Selector -->
       <div class="form-section template-selector">
         <label style="font-size: 13px; font-weight: bold; color: #333; margin-bottom: 10px; display: block;">Quick Start Template:</label>
         <select id="templateSelect" style="width: 100%; padding: 10px; font-size: 14px; border: 1px solid #ddd; border-radius: 4px;">
@@ -123,7 +271,6 @@
         </select>
       </div>
 
-      <!-- Rate Settings -->
       <div class="rate-settings">
         <h3 style="font-size: 14px; margin-bottom: 15px; color: #333;">Labor Rate & Markup Settings</h3>
         <div class="markup-grid">
@@ -142,7 +289,6 @@
         </div>
       </div>
 
-      <!-- Client Information -->
       <div class="form-section">
         <div class="section-title">Client Information</div>
         <div class="form-grid">
@@ -180,7 +326,6 @@
           </div>
         </div>
         
-        <!-- Payment Terms Section -->
         <div style="margin-top: 20px;">
           <label style="font-size: 13px; font-weight: bold; color: #333; margin-bottom: 8px; display: block;">Payment Terms *</label>
           <select id="paymentTerms" style="width: 100%; padding: 10px; font-size: 14px; border: 1px solid #ddd; border-radius: 4px;">
@@ -193,24 +338,21 @@
         </div>
       </div>
 
-      <!-- Quick-Add Item Library -->
       <div class="form-section">
         <div class="section-title">Quick-Add Item Library</div>
-        <div class="library-search-container">
-          <input type="text" id="librarySearch" placeholder="Search services..." class="library-search-input">
-          <button onclick="openLibraryManager()" class="btn-secondary library-manage-btn">Manage Library</button>
+        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+          <input type="text" id="librarySearch" placeholder="Search services..." style="flex: 1; padding: 10px; font-size: 14px; border: 1px solid #ddd; border-radius: 4px;">
+          <button onclick="openLibraryManager()" class="btn-secondary" style="white-space: nowrap;">Manage Library</button>
         </div>
         <div id="libraryItems" class="library-items-grid"></div>
       </div>
 
-      <!-- Line Items with Sections -->
       <div class="items-section">
         <div class="section-title">Quote Items (Organized by Section)</div>
         <div id="sectionsContainer"></div>
         <button class="add-section-btn" onclick="addSection()">+ Add New Section</button>
       </div>
 
-      <!-- Totals -->
       <div class="totals-section">
         <div class="totals-grid">
           <div class="total-row">
@@ -236,12 +378,10 @@
         </div>
       </div>
 
-      <!-- Actions -->
       <div class="actions">
         <button class="btn-primary" onclick="generateEstimate()">Generate Estimate Preview</button>
       </div>
 
-      <!-- Modal for Estimate Preview -->
       <div id="previewModal" class="modal">
         <div class="modal-content">
           <div class="modal-header">
@@ -258,7 +398,6 @@
         </div>
       </div>
 
-      <!-- Library Manager Modal -->
       <div id="libraryModal" class="modal">
         <div class="modal-content">
           <div class="modal-header">
@@ -268,7 +407,7 @@
           <div class="modal-body">
             <div style="margin-bottom: 20px;">
               <h3 style="font-size: 14px; margin-bottom: 10px;">Add New Service</h3>
-              <div class="library-add-grid">
+              <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 100px; gap: 10px; align-items: end;">
                 <div>
                   <label style="font-size: 12px; font-weight: bold; color: #333; margin-bottom: 5px; display: block;">Description</label>
                   <input type="text" id="newLibraryDesc" placeholder="Service description" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
@@ -284,7 +423,7 @@
                     <option value="labor">Labor</option>
                   </select>
                 </div>
-                <button onclick="addLibraryItem()" class="btn-primary" style="padding: 8px 15px; font-size: 13px; align-self: end;">Add</button>
+                <button onclick="addLibraryItem()" class="btn-primary" style="padding: 8px 15px; font-size: 13px;">Add</button>
               </div>
             </div>
             <div>
@@ -302,9 +441,9 @@
 
   <script src="script.js"></script>
   <script src="pdf-generator.js"></script>
+  <script src="settings.js"></script>
   <script src="navigation.js"></script>
   
-  <!-- Service Worker Registration -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {

@@ -38,6 +38,7 @@
 .splash-content {
   text-align: center;
   animation: slideUp 0.8s ease;
+  padding: 20px;
 }
 
 @keyframes slideUp {
@@ -54,6 +55,25 @@
 .splash-logo {
   width: 200px;
   height: auto;
+  max-width: 80vw;
+}
+
+/* Loading animation */
+.splash-loader {
+  margin-top: 30px;
+  width: 50px;
+  height: 50px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #d4af37;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 /* DASHBOARD SCREEN STYLES */
@@ -77,6 +97,7 @@
   align-items: center;
   gap: 20px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  flex-wrap: wrap;
 }
 
 .dashboard-logo {
@@ -135,6 +156,8 @@
   cursor: pointer;
   position: relative;
   overflow: hidden;
+  /* Better touch target */
+  min-height: 220px;
 }
 
 .tool-card::before {
@@ -173,6 +196,10 @@
 .tool-card.active:hover {
   transform: translateY(-8px);
   box-shadow: 0 12px 40px rgba(212, 175, 55, 0.3);
+}
+
+.tool-card.active:active {
+  transform: translateY(-4px);
 }
 
 .tool-card.coming-soon {
@@ -247,6 +274,7 @@
   align-items: center;
   gap: 20px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  flex-wrap: wrap;
 }
 
 .back-button {
@@ -259,11 +287,17 @@
   font-size: 14px;
   font-weight: bold;
   transition: all 0.3s;
+  min-height: 44px;
+  white-space: nowrap;
 }
 
 .back-button:hover {
   background: #d4af37;
   color: #1a1a1a;
+}
+
+.back-button:active {
+  transform: scale(0.98);
 }
 
 .nav-title {
@@ -272,7 +306,11 @@
   color: white;
 }
 
-/* Mobile Responsive */
+/* ==========================================
+   RESPONSIVE BREAKPOINTS
+   ========================================== */
+
+/* Tablet devices (768px and below) */
 @media (max-width: 768px) {
   .splash-logo {
     width: 150px;
@@ -280,6 +318,14 @@
   
   .dashboard-header {
     padding: 20px;
+  }
+
+  .dashboard-logo {
+    width: 50px;
+  }
+
+  .dashboard-title {
+    font-size: 20px;
   }
   
   .dashboard-content {
@@ -289,13 +335,245 @@
   .dashboard-welcome {
     font-size: 28px;
   }
+
+  .dashboard-subtitle {
+    font-size: 16px;
+    margin-bottom: 30px;
+  }
   
   .tools-grid {
     grid-template-columns: 1fr;
     gap: 20px;
   }
+
+  .tool-card {
+    padding: 25px;
+    min-height: 200px;
+  }
+
+  .tool-icon {
+    font-size: 40px;
+  }
+
+  .tool-title {
+    font-size: 20px;
+  }
   
   .quotation-nav {
     padding: 15px 20px;
+  }
+
+  .nav-title {
+    font-size: 16px;
+  }
+}
+
+/* Small mobile devices (480px and below) */
+@media (max-width: 480px) {
+  .splash-logo {
+    width: 120px;
+  }
+
+  .splash-loader {
+    width: 40px;
+    height: 40px;
+    margin-top: 20px;
+  }
+
+  .dashboard-header {
+    padding: 15px;
+    gap: 15px;
+  }
+
+  .dashboard-logo {
+    width: 40px;
+  }
+
+  .dashboard-title {
+    font-size: 16px;
+    letter-spacing: 0.5px;
+  }
+
+  .dashboard-content {
+    padding: 30px 15px;
+  }
+
+  .dashboard-welcome {
+    font-size: 24px;
+  }
+
+  .dashboard-subtitle {
+    font-size: 14px;
+    margin-bottom: 25px;
+  }
+
+  .tool-card {
+    padding: 20px;
+    min-height: 180px;
+  }
+
+  .tool-icon {
+    font-size: 36px;
+    margin-bottom: 15px;
+  }
+
+  .tool-title {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+
+  .tool-description {
+    font-size: 13px;
+    margin-bottom: 15px;
+  }
+
+  .tool-status {
+    padding: 5px 12px;
+    font-size: 11px;
+  }
+
+  .dashboard-footer {
+    padding: 15px;
+    font-size: 11px;
+  }
+
+  .quotation-nav {
+    padding: 12px 15px;
+  }
+
+  .back-button {
+    padding: 8px 15px;
+    font-size: 13px;
+  }
+
+  .nav-title {
+    font-size: 14px;
+  }
+}
+
+/* Ultra-narrow devices like Samsung Fold cover screen (374px and below) */
+@media (max-width: 400px) {
+  .splash-logo {
+    width: 100px;
+  }
+
+  .dashboard-header {
+    padding: 12px;
+  }
+
+  .dashboard-logo {
+    width: 35px;
+  }
+
+  .dashboard-title {
+    font-size: 14px;
+  }
+
+  .dashboard-content {
+    padding: 25px 12px;
+  }
+
+  .dashboard-welcome {
+    font-size: 20px;
+    word-break: break-word;
+  }
+
+  .dashboard-subtitle {
+    font-size: 13px;
+  }
+
+  .tools-grid {
+    gap: 15px;
+  }
+
+  .tool-card {
+    padding: 18px;
+    min-height: 170px;
+  }
+
+  .tool-icon {
+    font-size: 32px;
+  }
+
+  .tool-title {
+    font-size: 16px;
+  }
+
+  .tool-description {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .quotation-nav {
+    padding: 10px 12px;
+    gap: 10px;
+  }
+
+  .back-button {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  .nav-title {
+    font-size: 13px;
+  }
+}
+
+/* Landscape orientation adjustments for narrow devices */
+@media (max-width: 768px) and (orientation: landscape) {
+  .dashboard-content {
+    padding: 30px 20px;
+  }
+
+  .dashboard-welcome {
+    font-size: 24px;
+    margin-bottom: 8px;
+  }
+
+  .dashboard-subtitle {
+    margin-bottom: 25px;
+  }
+
+  .tools-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+
+  .tool-card {
+    min-height: 160px;
+  }
+}
+
+/* Very narrow landscape (like Fold cover in landscape) */
+@media (max-width: 500px) and (max-height: 400px) and (orientation: landscape) {
+  .splash-screen {
+    padding: 20px;
+  }
+
+  .splash-logo {
+    width: 80px;
+  }
+
+  .splash-loader {
+    width: 30px;
+    height: 30px;
+    margin-top: 15px;
+  }
+
+  .dashboard-header {
+    padding: 10px 15px;
+  }
+
+  .dashboard-content {
+    padding: 20px 15px;
+  }
+
+  .tools-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+
+  .tool-card {
+    padding: 15px;
+    min-height: 140px;
   }
 }

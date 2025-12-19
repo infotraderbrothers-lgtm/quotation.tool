@@ -136,6 +136,11 @@ async function generatePDF(event) {
 function generateCompleteHTML() {
   const estimateContent = document.getElementById('estimateContainer').innerHTML;
   
+  // Get company settings for dynamic colors in PDF
+  const settings = getCompanySettings();
+  const primaryColor = settings ? settings.primaryColor : '#d4af37';
+  const secondaryColor = settings ? settings.secondaryColor : '#bc9c22';
+  
   const styles = `
     <style>
       * {
@@ -177,7 +182,7 @@ function generateCompleteHTML() {
       }
       
       .company-name .highlight {
-        color: #d4af37;
+        color: ${primaryColor};
       }
       
       .company-details {
@@ -197,7 +202,7 @@ function generateCompleteHTML() {
       }
       
       .estimate-banner {
-        background: linear-gradient(135deg, #bc9c22, #d4af37);
+        background: linear-gradient(135deg, ${secondaryColor}, ${primaryColor});
         padding: 15px 20px;
         margin-bottom: 25px;
         display: inline-block;
@@ -257,7 +262,7 @@ function generateCompleteHTML() {
       }
       
       .expiry-date {
-        background: linear-gradient(135deg, #bc9c22, #d4af37);
+        background: linear-gradient(135deg, ${secondaryColor}, ${primaryColor});
         padding: 5px 10px;
         display: inline-block;
         color: white;
@@ -266,7 +271,7 @@ function generateCompleteHTML() {
 
       .expiry-warning {
         background: #fff3cd;
-        border-left: 4px solid #d4af37;
+        border-left: 4px solid ${primaryColor};
         padding: 12px 15px;
         margin-bottom: 20px;
         border-radius: 4px;
@@ -334,8 +339,8 @@ function generateCompleteHTML() {
         font-size: 13px;
         font-weight: 600;
         color: #333;
-        border-top: 2px solid #bc9c22;
-        border-bottom: 1px solid #bc9c22;
+        border-top: 2px solid ${secondaryColor};
+        border-bottom: 1px solid ${secondaryColor};
       }
       
       .payment-terms-section {
@@ -363,7 +368,7 @@ function generateCompleteHTML() {
         margin: 30px 0;
         padding: 20px;
         background: #f9f9f9;
-        border-left: 3px solid #bc9c22;
+        border-left: 3px solid ${secondaryColor};
       }
       
       .notes-section h3 {
@@ -405,7 +410,7 @@ function generateCompleteHTML() {
       }
       
       .total-row-preview.final {
-        background: linear-gradient(135deg, #bc9c22, #d4af37);
+        background: linear-gradient(135deg, ${secondaryColor}, ${primaryColor});
         color: white;
         font-weight: bold;
         font-size: 16px;

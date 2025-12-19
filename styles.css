@@ -1,3 +1,45 @@
+/* Dynamic Color Support */
+:root {
+  --primary-color: #d4af37;
+  --secondary-color: #bc9c22;
+}
+
+/* Replace all hardcoded colors with variables */
+.highlight,
+.splash-highlight {
+  background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.section-title {
+  background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+}
+
+.btn-primary,
+.add-section-btn {
+  background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+}
+
+.total-row.final .amount {
+  background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.estimate-banner,
+.expiry-date {
+  background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+}
+
+.total-row-preview.final {
+  background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+}
+
+/* Keep rest of your existing styles.css below this */
+
 * {
   margin: 0;
   padding: 0;

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRM - Client & Project Management</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="splash.css">
+  <link rel="stylesheet" href="crm.css">
+</head>
+<body>
+  
+  <!-- CRM SCREEN -->
+  <div id="crmScreen" class="crm-screen active">
+    <div class="crm-nav">
+      <button class="back-button" onclick="window.history.back()">← Back to Dashboard</button>
+      <div class="nav-title">Client & Project Management</div>
+      <div class="crm-tabs">
+        <button class="crm-tab active" onclick="switchCRMTab('clients')">Clients</button>
+        <button class="crm-tab" onclick="switchCRMTab('projects')">Project Management</button>
+      </div>
+    </div>
+
+    <!-- CLIENTS TAB -->
+    <div id="clientsTab" class="crm-tab-content active">
+      <div class="crm-container">
+        <div class="crm-header">
+          <h2>Clients</h2>
+          <div class="crm-actions">
+            <input type="text" id="clientSearch" placeholder="Search clients..." class="crm-search">
+            <button class="btn-primary" onclick="openAddClientModal()">+ Add Client</button>
+            <button class="btn-secondary" onclick="openColumnManager('clients')">⚙️ Manage Columns</button>
+          </div>
+        </div>
+
+        <div class="crm-table-container">
+          <table class="crm-table" id="clientsTable">
+            <thead id="clientsTableHead">
+              <tr>
+                <th data-field="name">Name</th>
+                <th data-field="clientId">Client ID</th>
+                <th data-field="email">Email</th>
+                <th data-field="phone">Phone</th>
+                <th data-field="companyName">Company Name</th>
+                <th data-field="status">Status</th>
+                <th data-field="contract">Contract</th>
+                <th data-field="projectManagement">Project Management</th>
+                <th class="actions-column">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="clientsTableBody">
+              <!-- Rows populated by JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROJECTS TAB -->
+    <div id="projectsTab" class="crm-tab-content">
+      <div class="crm-container">
+        <div class="crm-header">
+          <h2>Project Management</h2>
+          <div class="crm-actions">
+            <input type="text" id="projectSearch" placeholder="Search projects..." class="crm-search">
+            <button class="btn-primary" onclick="openAddProjectModal()">+ Add Project</button>
+            <button class="btn-secondary" onclick="openColumnManager('projects')">⚙️ Manage Columns</button>
+          </div>
+        </div>
+
+        <div class="crm-table-container">
+          <table class="crm-table" id="projectsTable">
+            <thead id="projectsTableHead">
+              <tr>
+                <th data-field="companyName">Company Name</th>
+                <th data-field="projectId">Project ID</th>
+                <th data-field="client">Client</th>
+                <th data-field="lastUpdated">Last Updated</th>
+                <th data-field="status">Status</th>
+                <th data-field="callOffContract">Call-Off Contract(s)</th>
+                <th class="actions-column">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="projectsTableBody">
+              <!-- Rows populated by JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD/EDIT CLIENT MODAL -->
+  <div id="clientModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="clientModalTitle">Add Client</h2>
+        <span class="close" onclick="closeClientModal()">&times;</span>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="editClientId">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Name *</label>
+            <input type="text" id="clientName" required>
+          </div>
+          <div class="form-group">
+            <label>Client ID *</label>
+            <input type="text" id="clientClientId" required>
+          </div>
+          <div class="form-group">
+            <label>Email *</label>
+            <input type="email" id="clientEmail" required>
+          </div>
+          <div class="form-group">
+            <label>Phone</label>
+            <input type="tel" id="clientPhone">
+          </div>
+          <div class="form-group">
+            <label>Company Name</label>
+            <input type="text" id="clientCompanyName">
+          </div>
+          <div class="form-group">
+            <label>Status</label>
+            <select id="clientStatus">
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+              <option value="Lead">Lead</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Contract</label>
+            <input type="text" id="clientContract">
+          </div>
+          <div class="form-group">
+            <label>Link to Project</label>
+            <select id="clientProjectLink">
+              <option value="">-- Select Project --</option>
+              <!-- Populated dynamically -->
+            </select>
+          </div>
+        </div>
+        <div id="clientCustomFields"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeClientModal()">Cancel</button>
+        <button class="btn-primary" onclick="saveClient()">Save Client</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD/EDIT PROJECT MODAL -->
+  <div id="projectModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="projectModalTitle">Add Project</h2>
+        <span class="close" onclick="closeProjectModal()">&times;</span>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="editProjectId">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Company Name *</label>
+            <input type="text" id="projectCompanyName" required>
+          </div>
+          <div class="form-group">
+            <label>Project ID *</label>
+            <input type="text" id="projectProjectId" required>
+          </div>
+          <div class="form-group">
+            <label>Link to Client</label>
+            <select id="projectClientLink">
+              <option value="">-- Select Client --</option>
+              <!-- Populated dynamically -->
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Status</label>
+            <select id="projectStatus">
+              <option value="Active">Active</option>
+              <option value="On Hold">On Hold</option>
+              <option value="Completed">Completed</option>
+              <option value="Cancelled">Cancelled</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Call-Off Contract(s)</label>
+            <input type="text" id="projectCallOff">
+          </div>
+        </div>
+        <div id="projectCustomFields"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeProjectModal()">Cancel</button>
+        <button class="btn-primary" onclick="saveProject()">Save Project</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- COLUMN MANAGER MODAL -->
+  <div id="columnManagerModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Manage Columns</h2>
+        <span class="close" onclick="closeColumnManager()">&times;</span>
+      </div>
+      <div class="modal-body">
+        <h3 style="margin-bottom: 15px;">Add New Column</h3>
+        <div class="form-grid" style="margin-bottom: 30px;">
+          <div class="form-group">
+            <label>Column Name</label>
+            <input type="text" id="newColumnName" placeholder="e.g., Budget">
+          </div>
+          <div class="form-group">
+            <label>Column Type</label>
+            <select id="newColumnType">
+              <option value="text">Text</option>
+              <option value="number">Number</option>
+              <option value="email">Email</option>
+              <option value="phone">Phone</option>
+              <option value="date">Date</option>
+              <option value="select">Dropdown</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn-primary" onclick="addCustomColumn()">Add Column</button>
+
+        <hr style="margin: 30px 0; border: none; border-top: 1px solid #ddd;">
+
+        <h3 style="margin-bottom: 15px;">Existing Custom Columns</h3>
+        <div id="customColumnsList"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeColumnManager()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LINKED RECORD DETAIL MODAL -->
+  <div id="linkedRecordModal" class="modal">
+    <div class="modal-content modal-large">
+      <div class="modal-header">
+        <h2 id="linkedRecordTitle">Record Details</h2>
+        <span class="close" onclick="closeLinkedRecordModal()">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="linked-record-container">
+          <div class="linked-record-section">
+            <h3>Client Information</h3>
+            <div id="linkedClientInfo" class="info-grid"></div>
+          </div>
+          <div class="linked-record-section">
+            <h3>Project Information</h3>
+            <div id="linkedProjectInfo" class="info-grid"></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeLinkedRecordModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="crm-data.js"></script>
+  <script src="crm.js"></script>
+</body>
+</html>

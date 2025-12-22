@@ -425,3 +425,225 @@ body.dark-mode .info-value {
     grid-template-columns: 1fr;
   }
 }
+
+/* Enhanced Mobile Responsive Styles */
+@media (max-width: 768px) {
+  .crm-nav {
+    padding: 15px 20px;
+  }
+  
+  .crm-tabs {
+    width: 100%;
+    margin-left: 0;
+  }
+  
+  .crm-tab {
+    flex: 1;
+    text-align: center;
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+  
+  .crm-tab-content {
+    padding: 20px 10px;
+  }
+  
+  .crm-header {
+    padding: 20px 15px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .crm-header h2 {
+    font-size: 20px;
+    margin-bottom: 15px;
+  }
+  
+  .crm-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+  
+  .crm-search {
+    width: 100%;
+    min-width: auto;
+  }
+  
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .crm-table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .crm-table {
+    min-width: 800px;
+    font-size: 12px;
+  }
+  
+  .crm-table th,
+  .crm-table td {
+    padding: 10px 8px;
+    font-size: 12px;
+  }
+  
+  .btn-icon {
+    font-size: 16px;
+    padding: 4px 8px;
+  }
+  
+  .status-badge {
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+  
+  /* Modal adjustments */
+  .modal-content {
+    width: 95%;
+    margin: 5% auto;
+  }
+  
+  .modal-header {
+    padding: 15px 20px;
+  }
+  
+  .modal-header h2 {
+    font-size: 18px;
+  }
+  
+  .modal-body {
+    padding: 20px;
+    max-height: 60vh;
+  }
+  
+  .modal-footer {
+    padding: 15px 20px;
+    flex-direction: column;
+  }
+  
+  .modal-footer .btn-primary,
+  .modal-footer .btn-secondary {
+    width: 100%;
+    margin: 5px 0;
+  }
+  
+  .form-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .linked-record-container {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .linked-record-section {
+    padding: 15px;
+  }
+  
+  .linked-record-section h3 {
+    font-size: 16px;
+  }
+  
+  .info-row {
+    grid-template-columns: 120px 1fr;
+    gap: 8px;
+    font-size: 12px;
+  }
+  
+  .custom-column-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .custom-column-item button {
+    width: 100%;
+  }
+}
+
+/* Extra small devices (phones in portrait) */
+@media (max-width: 480px) {
+  .crm-tab {
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+  
+  .crm-header h2 {
+    font-size: 18px;
+  }
+  
+  .crm-table {
+    min-width: 600px;
+    font-size: 11px;
+  }
+  
+  .crm-table th,
+  .crm-table td {
+    padding: 8px 6px;
+    font-size: 11px;
+  }
+  
+  .modal-header h2 {
+    font-size: 16px;
+  }
+  
+  .close {
+    font-size: 28px;
+  }
+  
+  .info-row {
+    grid-template-columns: 100px 1fr;
+    font-size: 11px;
+  }
+  
+  .back-button {
+    padding: 8px 15px;
+    font-size: 12px;
+  }
+  
+  .nav-title {
+    font-size: 14px;
+  }
+}
+
+/* Landscape mode adjustments */
+@media (max-width: 768px) and (orientation: landscape) {
+  .crm-tab-content {
+    padding: 15px 20px;
+  }
+  
+  .modal-body {
+    max-height: 50vh;
+  }
+}
+
+/* Touch-friendly adjustments */
+@media (hover: none) and (pointer: coarse) {
+  .crm-table tbody tr:active {
+    background: #e8e8e8;
+  }
+  
+  .btn-icon {
+    min-width: 40px;
+    min-height: 40px;
+  }
+  
+  .crm-tab {
+    min-height: 44px;
+  }
+  
+  .btn-primary,
+  .btn-secondary {
+    min-height: 44px;
+  }
+  
+  .linked-field {
+    padding: 4px 0;
+    min-height: 30px;
+    display: inline-block;
+  }
+}

@@ -53,3 +53,8 @@ function navigateToDashboard() {
     window.scrollTo(0, 0);
   }
 }
+
+function navigateToCRM() {
+  // Navigate to CRM page
+  window.location.href = 'crm.html';
+}
